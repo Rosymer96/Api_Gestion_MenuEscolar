@@ -20,6 +20,20 @@ const addStudent = async (name, studentDni, classId, tutorDni) => {
   return result;
 };
 
-//Select del dni del tutor
+//Editar estudiante:
 
-module.exports = { addStudent, findByDni };
+//Eliminar estudiante:
+
+const desactiveStudent = async (id) => {
+  const desactive = "UPDATE Student SET activo = FALSE WHERE idStudent = ?";
+  const [result] = await pool.query(desactive, [id]);
+  return result;
+};
+
+const reactivateStudent = async (dni) => {
+  const reactive = "UPDATE Student SET activo = TRUE WHERE student_dni = ?";
+  const [result] = await pool.query(reactive, [dni]);
+  return result;
+};
+
+module.exports = { addStudent, findByDni, desactiveStudent, reactivateStudent };

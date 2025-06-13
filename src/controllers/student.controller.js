@@ -16,9 +16,17 @@ const registerStudent = async (req, res) => {
 
     const existingStudent = await studentModel.findByDni(studentDni);
     if (existingStudent) {
-      return res.status(409).json({
-        error: "Ya existe un estudiante registrado con este DNI",
-      });
+      if (existingStudent.activo) {
+        return res
+          .status(409)
+          .json({ error: "Ya existe un estudiante activo con este DNI" });
+      } else {
+        // Reactivar al estudiante inactivo
+        await studentModel.reactivateStudent(studentDni);
+        return res
+          .status(200)
+          .json({ message: "Estudiante reactivado exitosamente" });
+      }
     }
     //Agrego el estudiante
     const result = await studentModel.addStudent(
@@ -34,7 +42,25 @@ const registerStudent = async (req, res) => {
   }
 };
 
-//Buscar el dni del tutor y avisar si lo encuentra:
+//Cambiar el estado activo del estudiante al eliminarlo "de la logica"
+
+const deleteStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await studentModel.desactiveStudent(id);
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ error: "Estudiante no encontrado o ya inactivo" });
+    }
+    res.status(200).json({ message: "Estudiante marcado como inactivo" });
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+};
+
+//Buscar el dni  y avisar si lo encuentra:
 
 //  si no lo encuentra, avisar queno tiene estudiantes asignados a ese tutor
 
@@ -46,4 +72,4 @@ const registerStudent = async (req, res) => {
 
 //encripta la contraseña
 
-module.exports = { registerStudent };
+module.exports = { registerStudent, deleteStudent };
