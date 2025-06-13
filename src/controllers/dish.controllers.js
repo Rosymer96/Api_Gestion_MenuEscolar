@@ -1,11 +1,9 @@
-
 //Crear plato
 
+//Listas todos los platos(opcional)
 
-//Listar plato
-
+//Listar plato por tipo
 
 //Modificar plato
 
-
-//Borrar
+//Modificar el estado a inactivo

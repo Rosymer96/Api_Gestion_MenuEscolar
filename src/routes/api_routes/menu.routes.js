@@ -1,6 +1,16 @@
 
 
 
+//Crear el menu y asignarlo
 
 
-module.exports ={}
+//Listar menu por clase
+
+
+//Editar el menu 
+
+
+//Borrar Menu
+
+
+// module.exports ={}

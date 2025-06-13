@@ -1,3 +1,9 @@
-const router = require("express").Router();
+// const router = require("express").Router();
 
-module.exports = {};
+//endpoints para:
+
+//Crear clase
+
+//Editar nombre de la clase
+
+// module.exports = {};

@@ -1,8 +1,10 @@
-//modelo de datos
-const pool = require("../config/conexion");
+// //modelo de datos
+// const pool = require("../config/conexion");
 
-//Crear las peticiones SQL para crear la class
+// //Crear las peticiones SQL para crear la class
 
-//selectClass
+// //selectClass 
 
-module.exports = {};
+//editar nombre de clase
+
+// module.exports = {};

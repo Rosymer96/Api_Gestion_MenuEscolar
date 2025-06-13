@@ -1,12 +1,12 @@
 //modelo de datos
-const pool = require("../config/conexion");
+//const pool = require("../config/conexion");
 
 //Sql para el CRUD del menu
 
-//Crear el usuario
+//Crear el usuario(guardar el id creado en la table de estudiante(tutorid))
 
-//Listar el usuario
+//Listar los usuarios
 
 //Editar el usuario
 
-//Eliminar el usuario
+//Eliminar el usuario(borrar el tutorid asociado al estudiante).

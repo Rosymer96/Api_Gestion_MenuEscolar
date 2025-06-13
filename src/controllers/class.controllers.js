@@ -2,5 +2,4 @@
 
 //Crear clase
 
-
-module.exports ={}
+//module.exports ={}
