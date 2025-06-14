@@ -1,12 +1,58 @@
 //modelo de datos
-//const pool = require("../config/conexion");
+const pool = require("../config/conexion");
 
-//Sql para el CRUD del menu
+//Sql para el CRUD del usuario
 
-//Crear el usuario(guardar el id creado en la table de estudiante(tutorid))
+//Crear el usuario TUTOR
+// Busqueda de dni en tabla student:
+
+const findDniInStudent = async (tutorDni) => {
+  const select = "SELECT * FROM Student WHERE tutor_dni = ?";
+  const [result] = await pool.query(select, [tutorDni]);
+  if (result.length === 0) {
+    return false;
+  }
+  return result;
+};
+
+//Revisar si el campo id_tutor en tabla student esta lleno.
+
+const checkTutorId = async (tutorId) => {
+  const select = "SELECT * FROM Student WHERE tutor_id = ?";
+  const [result] = await pool.query(select, [tutorId]);
+  if (result.length === 0) {
+    return false;
+  }
+  return result;
+};
+//
+const saveTutorId = async (newTutorId, tutorDni) => {
+  const update = "UPDATE Student SET tutor_id = ? WHERE tutor_dni = ?";
+  const [result] = await pool.query(update, [newTutorId, tutorDni]);
+  return result;
+};
+
+//Crear el usuario ADMIN
+
+//Crear tutor user
+const createTutorUser = async (name, email, password, dni, rol) => {
+  const insert =
+    "INSERT INTO User (name, email, password, dni, rol)  VALUES (?,?,?,?,?)";
+  const [result] = await pool.query(insert, [name, email, password, dni, rol]);
+  return result;
+};
+
+const createAdminUser = async () => {};
 
 //Listar los usuarios
 
 //Editar el usuario
 
 //Eliminar el usuario(borrar el tutorid asociado al estudiante).
+
+module.exports = {
+  findDniInStudent,
+  checkTutorId,
+  createTutorUser,
+  saveTutorId,
+};
