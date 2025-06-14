@@ -1,5 +1,20 @@
-//Funciones que modifican de las clases
+// Funciones que modifican de las clases
 
-//Crear clase
+// Listar clase
+const getAllClasses = async (req, res) => {};
 
-//module.exports ={}
+const getClassById = async (req, res) => {};
+
+const createClass = async (req, res) => {};
+
+const updateClass = async (req, res) => {};
+
+const deleteClass = async (req, res) => {};
+
+module.exports = {
+  getAllClasses,
+  createClass,
+  getClassById,
+  updateClass,
+  deleteClass,
+};

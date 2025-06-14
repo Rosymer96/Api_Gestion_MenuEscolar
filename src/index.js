@@ -1,20 +1,25 @@
-//todos los imports necesarios
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors'); // import cors
+const server = express();
+const PORT = 3500;
+
+server.use(cors());
+
+// Middleware to parse JSON bodies
+server.use(express.json());
 
 require("dotenv").config();
 
 const router = require("./routes/api.routes");
 
-// crear un servidor y configuracion
-const server = express();
-server.use(express.json());
-server.use(cors());
 
-// server.use("/api", router);   Descomentar cuando creen sus endpoints si mandara error.
+// Descomentar cuando creen sus endpoints si mandara error.
+server.use("/api", router);   
+
+
 
 // puerto a traves de cual escucho
-const PORT = 3500;
+
 server.listen(PORT, () => {
   console.log(`Server running http://localhost:${PORT}`);
 });
