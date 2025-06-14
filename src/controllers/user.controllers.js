@@ -2,6 +2,7 @@ const { JsonWebTokenError } = require("jsonwebtoken");
 const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { createToken } = require("../utils/jwt");
 
 //1.Crear el usuario TUTOR:
 
@@ -106,12 +107,77 @@ const registerAdminUser = async (req, res) => {
   }
 };
 
-//Si no, crea la cuenta, encripta la contrase;a
+//3.Login de usuario
 
-//3.Editar usuario
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios" });
+    }
+    const selectedUser = await userModel.selectByEmail(email);
+    if (!selectedUser) {
+      return res
+        .status(404)
+        .json({ message: "Email no corresponde a ningun usuario" });
+    }
+    //Convertirmos el password
+    const isSame = bcrypt.compareSync(password, selectedUser.password);
+    if (!isSame) {
+      return res.status(400).json({ message: "Contraseña incorrecta" });
+    }
+    //Creamos la data para enviarla a jwt
+    const data = {
+      id: selectedUser.id,
+      email: selectedUser.email,
+      rol: selectedUser.rol,
+    };
+    //Creamos el token
+    const token = createToken(data);
+    res.status(200).json({
+      message: "Login exitoso",
+      token,
+      user: {
+        id: selectedUser.id,
+        email: selectedUser.email,
+        rol: selectedUser.rol,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
 
-//4.Listar usuarios por rol
+//4. Ir al perfil del usuario
 
-//5.Eliminar usuario
+const getProfile = async (req, res) => {
+  try {
+    const dataUser = await userModel.selectById(req.userLogin.id);
+    if (!dataUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado" });
+    }
+    res.status(200).json({ success: true, data: dataUser });
+    console.log("He llegado al profile");
+  } catch (error) {
+    console.error("Error al obtener el perfil del administrador:", error);
+    res.status(500).json({ success: false, message: "Error interno" });
+  }
+};
 
-module.exports = { registerTutorUser, registerAdminUser };
+//5.Editar usuario
+
+//6.Listar usuarios por rol
+
+//7.Eliminar usuario
+
+module.exports = {
+  registerTutorUser,
+  registerAdminUser,
+  login,
+  getProfile,
+};

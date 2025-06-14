@@ -56,6 +56,30 @@ const createUser = async (name, email, password, dni, rol) => {
   return result[0];
 };
 
+//Hacer login de usuario
+
+//Select by email
+
+const selectByEmail = async (email) => {
+  const select = "SELECT * FROM User WHERE email = ?";
+  const [result] = await pool.query(select, [email]);
+  if (result.length === 0) {
+    return false;
+  }
+  return result[0];
+};
+
+//selectById
+
+const selectById = async (id) => {
+  const select = "SELECT * FROM User WHERE id = ?";
+  const [result] = await pool.query(select, [id]);
+  if (result.length === 0) {
+    return false;
+  }
+  return result[0];
+};
+
 //Listar los usuarios
 
 //Editar el usuario
@@ -69,4 +93,6 @@ module.exports = {
   saveTutorId,
   findDniInAdministrator,
   findDniInUser,
+  selectByEmail,
+  selectById,
 };
