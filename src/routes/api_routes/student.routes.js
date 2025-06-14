@@ -5,4 +5,6 @@ router.post("/create", student.registerStudent);
 
 router.patch("/:id/deactivate", student.deleteStudent);
 
+router.put("/:id/edit", student.editStudent);
+
 module.exports = router;

@@ -22,6 +22,19 @@ const addStudent = async (name, studentDni, classId, tutorDni) => {
 
 //Editar estudiante:
 
+const editStudentDB = async (id, name, studentDni, classId, tutorDni) => {
+  const edit =
+    "UPDATE Student SET name = ?, student_dni = ?, class_id = ?, tutor_dni = ? WHERE idStudent = ?";
+  const [result] = await pool.query(edit, [
+    name,
+    studentDni,
+    classId,
+    tutorDni,
+    id,
+  ]);
+  return result;
+};
+
 //Eliminar estudiante:
 
 const desactiveStudent = async (id) => {
@@ -36,4 +49,10 @@ const reactivateStudent = async (dni) => {
   return result;
 };
 
-module.exports = { addStudent, findByDni, desactiveStudent, reactivateStudent };
+module.exports = {
+  addStudent,
+  findByDni,
+  desactiveStudent,
+  reactivateStudent,
+  editStudentDB,
+};

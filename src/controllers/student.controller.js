@@ -42,6 +42,48 @@ const registerStudent = async (req, res) => {
   }
 };
 
+//Editar el estudiante:
+
+const editStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, studentDni, classId, tutorDni } = req.body;
+
+    // Validar datos obligatorios
+    if (!name || !studentDni || !classId || !tutorDni) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios" });
+    }
+    // Verifica que el DNI no esté duplicado en otro estudiante
+    const existingStudent = await studentModel.findByDni(studentDni);
+    if (existingStudent && existingStudent.idStudent !== parseInt(id)) {
+      return res
+        .status(409)
+        .json({ error: "El DNI ya está registrado a otro estudiante" });
+    }
+    const result = await studentModel.editStudentDB(
+      id,
+      name,
+      studentDni,
+      classId,
+      tutorDni
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Estudiante no encontrado" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Estudiante actualizado correctamente", data: result });
+  } catch (error) {
+    console.error("Error al editar estudiante:", error);
+    res
+      .status(500)
+      .json({ error: "Error del servidor al editar el estudiante" });
+  }
+};
+
 //Cambiar el estado activo del estudiante al eliminarlo "de la logica"
 
 const deleteStudent = async (req, res) => {
@@ -53,23 +95,15 @@ const deleteStudent = async (req, res) => {
         .status(404)
         .json({ error: "Estudiante no encontrado o ya inactivo" });
     }
-    res.status(200).json({ message: "Estudiante marcado como inactivo" });
+    res
+      .status(200)
+      .json({ message: "Estudiante marcado como inactivo", data: result });
   } catch (error) {
     res.status(500).json(error);
     console.log(error);
   }
 };
 
-//Buscar el dni  y avisar si lo encuentra:
 
-//  si no lo encuentra, avisar queno tiene estudiantes asignados a ese tutor
 
-//Si si lo encuentra revisa si el campo id_tutor esta lleno.
-
-//Si esta lleno id_tutor avisa que ya hay una cuenta con ese dni o documento
-
-//Si esta vacio el id_tutor, te crea la cuenta
-
-//encripta la contraseña
-
-module.exports = { registerStudent, deleteStudent };
+module.exports = { registerStudent, deleteStudent, editStudent };
