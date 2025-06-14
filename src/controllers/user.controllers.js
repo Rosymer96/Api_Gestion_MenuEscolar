@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 const registerTutorUser = async (req, res) => {
   try {
-    let { name, email, password, dni, rol } = req.body;
+    const { name, email, password, dni, rol } = req.body;
 
     if (!name || !email || !password || !dni || !rol) {
       return res
@@ -36,7 +36,7 @@ const registerTutorUser = async (req, res) => {
     //encripta la contraseña
     hashedPassword = bcrypt.hashSync(password, 10);
 
-    const newTutor = await userModel.createTutorUser(
+    const newTutor = await userModel.createUser(
       name,
       email,
       hashedPassword,
@@ -59,9 +59,52 @@ const registerTutorUser = async (req, res) => {
 
 //2.Crear el usuario admin
 
-//Revisa si existe su DNI en la tabla de DniAdministraror
+const registerAdminUser = async (req, res) => {
+  try {
+    const { name, email, password, dni, rol } = req.body;
 
-//Si si lo encuentra revisa si ya existe un usuario en la tabla usuarios y avisa que ya existe una cuenta asociada.
+    if (!name || !email || !password || !dni || !rol) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios" });
+    }
+
+    //Revisa si existe su DNI en la tabla de DniAdministraror
+    const existingAdmin = await userModel.findDniInAdministrator(dni);
+    if (!existingAdmin) {
+      return res.status(400).json({
+        message:
+          "No existen este administrador en la base de datos, revisa si el rol que escogiste es el correcto",
+      });
+    }
+    //Si si lo encuentra revisa si ya existe un usuario en la tabla usuarios y avisa que ya existe una cuenta asociada.
+
+    const existingUser = await userModel.findDniInUser(dni);
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Este administrador ya se encuentra registrado.",
+      });
+    }
+    //Si no, crea la cuenta
+    // Encripta la contraseña
+    hashedPassword = bcrypt.hashSync(password, 10);
+
+    const newAdmin = await userModel.createUser(
+      name,
+      email,
+      hashedPassword,
+      dni,
+      rol
+    );
+    res.status(201).json({
+      message: "Adminisrador registrado correctamente",
+      newAdminId: newAdmin.insertId,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
 
 //Si no, crea la cuenta, encripta la contrase;a
 
@@ -71,4 +114,4 @@ const registerTutorUser = async (req, res) => {
 
 //5.Eliminar usuario
 
-module.exports = { registerTutorUser };
+module.exports = { registerTutorUser, registerAdminUser };

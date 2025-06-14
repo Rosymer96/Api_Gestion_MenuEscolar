@@ -25,24 +25,36 @@ const checkTutorId = async (tutorId) => {
   }
   return result;
 };
-//
+//Guardar el id de tutor en los estudiantes relacionados.
 const saveTutorId = async (newTutorId, tutorDni) => {
   const update = "UPDATE Student SET tutor_id = ? WHERE tutor_dni = ?";
   const [result] = await pool.query(update, [newTutorId, tutorDni]);
   return result;
 };
 
-//Crear el usuario ADMIN
+//Buscar en dni del admin en la tabla DniAdministrator
 
-//Crear tutor user
-const createTutorUser = async (name, email, password, dni, rol) => {
+const findDniInAdministrator = async (dni) => {
+  const select = "SELECT * FROM DniAdministrator WHERE dni = ?";
+  const [result] = await pool.query(select, [dni]);
+  return result[0];
+};
+
+//Buscar si ya existe un usuario
+
+const findDniInUser = async (dni) => {
+  const select = "SELECT * FROM User WHERE dni = ?";
+  const [result] = await pool.query(select, [dni]);
+  return result[0];
+};
+
+//Crear user
+const createUser = async (name, email, password, dni, rol) => {
   const insert =
     "INSERT INTO User (name, email, password, dni, rol)  VALUES (?,?,?,?,?)";
   const [result] = await pool.query(insert, [name, email, password, dni, rol]);
-  return result;
+  return result[0];
 };
-
-const createAdminUser = async () => {};
 
 //Listar los usuarios
 
@@ -53,6 +65,8 @@ const createAdminUser = async () => {};
 module.exports = {
   findDniInStudent,
   checkTutorId,
-  createTutorUser,
+  createUser,
   saveTutorId,
+  findDniInAdministrator,
+  findDniInUser,
 };

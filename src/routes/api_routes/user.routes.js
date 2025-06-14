@@ -7,6 +7,8 @@ router.post("/register/tutor", userCon.registerTutorUser);
 
 //Crear el usuario administrador
 
+router.post("/register/admin", userCon.registerAdminUser);
+
 //Listar los usuarios
 
 //Editar el usuario
