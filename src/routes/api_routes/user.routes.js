@@ -26,7 +26,7 @@ router.get(
 router.get(
   "/profile/admin",
   auth.checkToken,
-  auth.authorizeRoles("admin"),
+  auth.authorizeRoles("administrador"),
   userCon.getProfile
 );
 
