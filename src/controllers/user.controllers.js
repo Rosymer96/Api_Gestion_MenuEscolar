@@ -45,6 +45,7 @@ const registerTutorUser = async (req, res) => {
       rol
     );
     //guarda el id de usuario en el tutor_id de la  tabla estudiante.
+    console.log("Resultado de createUser:", newTutor);
 
     await userModel.saveTutorId(newTutor.insertId, dni);
 
@@ -199,6 +200,16 @@ const updateUser = async (req, res) => {
 
 //6.Listar usuarios por rol
 
+const listTutors = async (req, res) => {
+  try {
+    const tutors = await userModel.selectAllTutors();
+    res.status(200).json({ message: tutors });
+  } catch (error) {
+    console.error("Error al obtener lista de tutores", error);
+    res.status(500).json({ success: false, message: "Error interno" });
+  }
+};
+
 //7.Eliminar usuario
 const deleteUser = async (req, res) => {
   try {
@@ -225,4 +236,5 @@ module.exports = {
   getProfile,
   updateUser,
   deleteUser,
+  listTutors,
 };

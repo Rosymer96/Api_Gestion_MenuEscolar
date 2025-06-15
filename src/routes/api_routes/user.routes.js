@@ -31,7 +31,7 @@ router.get(
 );
 
 //Listar los usuarios por rol
-
+router.get("/listTutors", userCon.listTutors);
 //Editar el usuario
 
 router.patch("/:id/update", userCon.updateUser);

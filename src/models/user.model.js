@@ -61,7 +61,7 @@ const createUser = async (name, email, password, dni, rol) => {
   const insert =
     "INSERT INTO User (name, email, password, dni, rol)  VALUES (?,?,?,?,?)";
   const [result] = await pool.query(insert, [name, email, password, dni, rol]);
-  return result[0];
+  return result;
 };
 
 //Hacer login de usuario
@@ -90,6 +90,13 @@ const selectById = async (id) => {
 
 //Listar los usuarios
 
+const selectAllTutors = async () => {
+  const select =
+    "SELECT id, name, email, dni FROM User WHERE rol = 'tutor' AND active = TRUE";
+  const [result] = await pool.query(select);
+  return result;
+};
+
 //Editar el usuario
 const updateUser = async (name, email, password, id) => {
   const update =
@@ -103,7 +110,8 @@ const updateUser = async (name, email, password, id) => {
 //Eliminar el usuario(borrar el tutorid asociado al estudiante).
 
 const deactiveUser = async (id) => {
-  const desactive = "UPDATE User SET active = FALSE WHERE id= ?";
+  const desactive =
+    "UPDATE User SET active = FALSE WHERE id = ? AND active = TRUE";
   const [result] = await pool.query(desactive, [id]);
   return result;
 };
@@ -120,4 +128,5 @@ module.exports = {
   selectById,
   updateUser,
   deactiveUser,
+  selectAllTutors,
 };
