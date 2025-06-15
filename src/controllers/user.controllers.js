@@ -8,9 +8,9 @@ const { createToken } = require("../utils/jwt");
 
 const registerTutorUser = async (req, res) => {
   try {
-    const { name, email, password, dni, rol } = req.body;
-
-    if (!name || !email || !password || !dni || !rol) {
+    const { name, email, password, dni } = req.body;
+    const rol = "tutor";
+    if (!name || !email || !password || !dni) {
       return res
         .status(400)
         .json({ error: "Todos los campos son obligatorios" });
@@ -62,9 +62,9 @@ const registerTutorUser = async (req, res) => {
 
 const registerAdminUser = async (req, res) => {
   try {
-    const { name, email, password, dni, rol } = req.body;
-
-    if (!name || !email || !password || !dni || !rol) {
+    const { name, email, password, dni } = req.body;
+    const rol = "administrador";
+    if (!name || !email || !password || !dni) {
       return res
         .status(400)
         .json({ error: "Todos los campos son obligatorios" });
@@ -74,13 +74,12 @@ const registerAdminUser = async (req, res) => {
     const existingAdmin = await userModel.findDniInAdministrator(dni);
     if (!existingAdmin) {
       return res.status(400).json({
-        message:
-          "No existen este administrador en la base de datos, revisa si el rol que escogiste es el correcto",
+        message: "No existen este administrador en la base de datos.",
       });
     }
     //Si si lo encuentra revisa si ya existe un usuario en la tabla usuarios y avisa que ya existe una cuenta asociada.
 
-    const existingUser = await userModel.findDniInUser(dni);
+    const existingUser = await userModel.findDniAdminInUser(dni);
     if (existingUser) {
       return res.status(400).json({
         message: "Este administrador ya se encuentra registrado.",
@@ -169,7 +168,34 @@ const getProfile = async (req, res) => {
   }
 };
 
-//5.Editar usuario
+//5.Editar usuario solo con name, email y password.
+
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios" });
+    }
+    //Encriptamos la nueva contrasena:
+    hashedPassword = bcrypt.hashSync(password, 10);
+
+    const result = await userModel.updateUser(name, email, hashedPassword, id);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Estudiante no encontrado" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Usuario actualizado correctamente", data: result });
+  } catch (error) {
+    console.error("Error al obtener el perfil del administrador:", error);
+    res.status(500).json({ success: false, message: "Error interno" });
+  }
+};
 
 //6.Listar usuarios por rol
 
@@ -180,4 +206,5 @@ module.exports = {
   registerAdminUser,
   login,
   getProfile,
+  updateUser,
 };

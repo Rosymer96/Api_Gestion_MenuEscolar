@@ -30,10 +30,13 @@ router.get(
   userCon.getProfile
 );
 
-//Listar los usuarios
+//Listar los usuarios por rol
 
 //Editar el usuario
 
+router.patch("/:id/update", userCon.updateUser);
+
 //Eliminar el usuario(borrar el tutorid asociado al estudiante).
+
 
 module.exports = router;

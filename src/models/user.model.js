@@ -48,6 +48,14 @@ const findDniInUser = async (dni) => {
   return result[0];
 };
 
+//Buscar si ya existe un usuario administrador con el dni
+
+const findDniAdminInUser = async (dni) => {
+  const select = "SELECT * FROM User WHERE dni = ? AND rol = 'administrador'";
+  const [result] = await pool.query(select, [dni]);
+  return result[0];
+};
+
 //Crear user
 const createUser = async (name, email, password, dni, rol) => {
   const insert =
@@ -83,8 +91,17 @@ const selectById = async (id) => {
 //Listar los usuarios
 
 //Editar el usuario
-
+const updateUser = async (name, email, password, id) => {
+  const update =
+    "UPDATE User SET name = ?, email = ?, password = ? WHERE id = ?;";
+  const [result] = await pool.query(update, [name, email, password, id]);
+  if (!result) {
+    return false;
+  }
+  return result;
+};
 //Eliminar el usuario(borrar el tutorid asociado al estudiante).
+
 
 module.exports = {
   findDniInStudent,
@@ -93,6 +110,9 @@ module.exports = {
   saveTutorId,
   findDniInAdministrator,
   findDniInUser,
+  findDniAdminInUser,
   selectByEmail,
   selectById,
+  updateUser,
+ 
 };
