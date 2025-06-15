@@ -37,6 +37,6 @@ router.get(
 router.patch("/:id/update", userCon.updateUser);
 
 //Eliminar el usuario(borrar el tutorid asociado al estudiante).
-
+router.patch("/:id/delete", userCon.deleteUser);
 
 module.exports = router;

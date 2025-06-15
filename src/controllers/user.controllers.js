@@ -200,6 +200,23 @@ const updateUser = async (req, res) => {
 //6.Listar usuarios por rol
 
 //7.Eliminar usuario
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await userModel.deactiveUser(id);
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ error: "Usuario no encontrado o ya inactivo" });
+    }
+    res
+      .status(200)
+      .json({ message: "Usuario marcado como inactivo", data: result });
+  } catch (error) {
+    console.error("Error al obtener el perfil del administrador:", error);
+    res.status(500).json({ success: false, message: "Error interno" });
+  }
+};
 
 module.exports = {
   registerTutorUser,
@@ -207,4 +224,5 @@ module.exports = {
   login,
   getProfile,
   updateUser,
+  deleteUser,
 };

@@ -69,7 +69,7 @@ const createUser = async (name, email, password, dni, rol) => {
 //Select by email
 
 const selectByEmail = async (email) => {
-  const select = "SELECT * FROM User WHERE email = ?";
+  const select = "SELECT * FROM User WHERE email = ? AND active = TRUE;";
   const [result] = await pool.query(select, [email]);
   if (result.length === 0) {
     return false;
@@ -102,6 +102,11 @@ const updateUser = async (name, email, password, id) => {
 };
 //Eliminar el usuario(borrar el tutorid asociado al estudiante).
 
+const deactiveUser = async (id) => {
+  const desactive = "UPDATE User SET active = FALSE WHERE id= ?";
+  const [result] = await pool.query(desactive, [id]);
+  return result;
+};
 
 module.exports = {
   findDniInStudent,
@@ -114,5 +119,5 @@ module.exports = {
   selectByEmail,
   selectById,
   updateUser,
- 
+  deactiveUser,
 };
