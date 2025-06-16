@@ -19,9 +19,13 @@ const selectByName = async (name) => {
 };
 
 //Listar:  todos  siempre que su active este en TRUE(importante hacer esa condicion)
-const selectDishBytype = async (dishType) => {};
+const selectAll = async () => {
+  const select = "SELECT * FROM Dish";
+  const [result] = await pool.query(select);
+  return result;
+};
 //Editar plato
 
 //Eliminar plato (OJO: cambiando el active a FALSE) NO BORRANDO EL PLATO PORQUE SINO AFECTARA MENUS ANTIGUOS ASOCIADOS A ESE PLATO;
 
-module.exports = { insertDish, selectByName };
+module.exports = { insertDish, selectByName, selectAll };

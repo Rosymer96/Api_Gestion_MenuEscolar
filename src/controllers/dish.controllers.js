@@ -30,11 +30,24 @@ const addDish = async (req, res) => {
 };
 
 //Listas todos los platos(opcional)
-
+const list = async (req, res) => {
+  try {
+    const result = await dishModel.selectAll();
+    if (result.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "No hay platos disponibles", data: [] });
+    }
+    res.status(200).json({ message: "Success", data: result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+};
 //Listar plato por tipo
 
 //Modificar plato
 
 //Modificar el estado a inactivo
 
-module.exports = { addDish };
+module.exports = { addDish, list };

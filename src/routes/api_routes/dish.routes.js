@@ -5,7 +5,7 @@ const dishCon = require("../../controllers/dish.controllers");
 //Crear plato
 router.post("/create", dishCon.addDish);
 //Listar plato por tipo
-
+router.get("/list", dishCon.list);
 //Modificar plato
 
 //Borrar
