@@ -20,6 +20,7 @@ const insertMenuDish = async (menuId, dishId) => {
 
 //Listar menu por clase
 const listMenuByMonth = async (classId, startDate, endDate) => {
+  //SELECT DATE_FORMAT(m.date, '%Y-%m-%d') le quita la hora a la fecha.
   const selectByClassAndMoth =
     "SELECT DATE_FORMAT(m.date, '%Y-%m-%d') AS date, d.name AS dish FROM Menu m JOIN MenuDish md ON m.idMenu = md.menu_id JOIN Dish d ON md.dish_id = d.idDish WHERE m.class_id = ? AND m.date BETWEEN ? AND ? ORDER BY m.date ASC";
   const [result] = await pool.query(selectByClassAndMoth, [
