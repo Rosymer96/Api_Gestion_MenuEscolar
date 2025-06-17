@@ -5,10 +5,8 @@ const menuCon = require("../../controllers/menu.controllers");
 
 router.post("/create", menuCon.createMenu);
 
-//menuId y platos a tabla MenuDish
-
-//Listar menu por clase
-
+//Listar menu por clase recibe un queryparams
+router.post("/list/:classId", menuCon.listByClassMonth);
 //Editar el menu
 
 //Borrar Menu
