@@ -7,15 +7,15 @@ const classController = require("../../controllers/class.controllers");
 // /api/class/
 router.get("/", classController.getAllClasses);
 // /api/class/id
-router.get("/:id", classController.getClassById);
+router.get("/:id", classController.findClassById);
 
 // /api/class/
-router.post("/", classController.createClass);
+router.post("/", classController.newClass);
 //Editar nombre de la clase
 
 //update class
 router.patch("/:id", classController.updateClass);
 
-router.delete("/:id", classController.deleteClass);
+// router.delete("/:id", classController.deleteClass);
 
 module.exports = router;
