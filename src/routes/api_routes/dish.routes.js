@@ -1,19 +1,20 @@
-
-// const router = require("express").Router();
-
+const router = require("express").Router();
+const dishCon = require("../../controllers/dish.controllers");
 //endpoints para:
 
-//Crear plato
+// Crear plato
+router.post("/create", dishCon.createDish);
 
+// Listar todos los platos
+router.get("/", dishCon.getAllDishes);
 
-//Listar plato por tipo
+// Listar platos por tipo
+router.get("/type/:dish_type", dishCon.getDishesByType);
 
+// Modificar plato
+router.put("/update/:id", dishCon.updateDish);
 
-//Modificar plato
+// Eliminar plato
+router.delete("/delete/:id", dishCon.deleteDish);
 
-
-//Borrar
-
-
-
-// module.exports ={}
+module.exports = router;
