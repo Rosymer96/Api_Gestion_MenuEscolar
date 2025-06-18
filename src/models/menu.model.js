@@ -31,7 +31,7 @@ const listMenuByMonth = async (classId, startDate, endDate) => {
   return result;
 };
 
-//Editar el menu
+//Editar el menu (Borrar MenuDish y insertar nuevos platos.)
 
 const deleteMenuDishes = async (menuId) => {
   const deleteDishes = "DELETE FROM MenuDish WHERE menu_id = ?";
@@ -41,9 +41,15 @@ const deleteMenuDishes = async (menuId) => {
 
 //Borrar Menu
 
+const deleteMenu = async (menuId) => {
+  const deleteMEnu = "DELETE FROM Menu WHERE idMenu = ?";
+  return await pool.query(deleteMEnu, [menuId]);
+};
+
 module.exports = {
   insertMenu,
   insertMenuDish,
   listMenuByMonth,
   deleteMenuDishes,
+  deleteMenu,
 };

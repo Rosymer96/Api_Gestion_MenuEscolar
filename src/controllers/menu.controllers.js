@@ -25,7 +25,7 @@ const createMenu = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    res.status(500).json({ error: "Error en el servidor al crear al menu" });
   }
 };
 
@@ -65,7 +65,7 @@ const listByClassMonth = async (req, res) => {
     console.log("Menus devueltos:", menuByDays, classId, startDate, endDate);
     res.status(200).json({ message: "Success", Menus: menuByDays });
   } catch (error) {
-    console.error("Error al listar el menu:", error);
+    console.error("Error en el servidor al listar el menu:", error);
     res.status(500).json({ error: "Error del servidor." });
   }
 };
@@ -98,4 +98,23 @@ const updateMenu = async (req, res) => {
 };
 //Borrar Menu
 
-module.exports = { createMenu, listByClassMonth, updateMenu };
+const deleteMenu = async (req, res) => {
+  try {
+    const { menuId } = req.params;
+    if (!menuId) {
+      return res
+        .status(400)
+        .json({ error: "Enviar el menuId es obligatorio." });
+    }
+    //Borrar todos los platos asociados a este menuId de MenuDish:
+    await menuModel.deleteMenuDishes(menuId);
+    //Borrar el menu de la tabla Menu:
+    await menuModel.deleteMenu(menuId);
+    res.status(200).json({ message: "Menú eliminado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error del servidor al eliminar el menú" });
+  }
+};
+
+module.exports = { createMenu, listByClassMonth, updateMenu, deleteMenu };

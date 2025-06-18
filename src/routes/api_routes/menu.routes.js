@@ -10,5 +10,5 @@ router.post("/list/:classId", menuCon.listByClassMonth);
 //Editar el menu
 router.put("/update", menuCon.updateMenu);
 //Borrar Menu
-
+router.delete("/delete/:menuId", menuCon.deleteMenu);
 module.exports = router;
