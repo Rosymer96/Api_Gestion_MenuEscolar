@@ -33,6 +33,17 @@ const listMenuByMonth = async (classId, startDate, endDate) => {
 
 //Editar el menu
 
+const deleteMenuDishes = async (menuId) => {
+  const deleteDishes = "DELETE FROM MenuDish WHERE menu_id = ?";
+  const [result] = await pool.query(deleteDishes, [menuId]);
+  return result;
+};
+
 //Borrar Menu
 
-module.exports = { insertMenu, insertMenuDish, listMenuByMonth };
+module.exports = {
+  insertMenu,
+  insertMenuDish,
+  listMenuByMonth,
+  deleteMenuDishes,
+};

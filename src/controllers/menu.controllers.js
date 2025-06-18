@@ -48,7 +48,6 @@ const listByClassMonth = async (req, res) => {
     const menus = await menuModel.listMenuByMonth(classId, startDate, endDate);
     //Ordenar la data para que el frontend lareciba limpia y ordenada:
 
-    
     const menuByDays = {};
     for (const menu of menus) {
       //Quitarle la hora a la fecha que recibimos de la BD.
@@ -71,7 +70,32 @@ const listByClassMonth = async (req, res) => {
   }
 };
 //Editar el menu
+const updateMenu = async (req, res) => {
+  try {
+    const { menuId, firstId, secondId, dessertId } = req.body;
 
+    if (!menuId || !firstId || !secondId || !dessertId) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son obligatorios" });
+    }
+
+    //Borrar los platos anteriores del menu:
+    await menuModel.deleteMenuDishes(menuId);
+    //Insertamos nuevos platos:
+
+    const newDishes = [firstId, secondId, dessertId];
+    for (const dish of newDishes) {
+      await menuModel.insertMenuDish(menuId, dish);
+    }
+    res.status(200).json({ message: "Menú actualizado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Error en el servidor al actualizar el menú" });
+  }
+};
 //Borrar Menu
 
-module.exports = { createMenu, listByClassMonth };
+module.exports = { createMenu, listByClassMonth, updateMenu };
