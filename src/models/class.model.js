@@ -1,14 +1,14 @@
 const pool = require("../config/conexion");
 
 const selectAll = async () => {
-  const allCalsses = "SELECT * FROM class ";
+  const allCalsses = "SELECT * FROM Class ";
   const [result] = await pool.query(allCalsses);
   return result;
 };
 
 // //Crear las peticiones SQL para crear la class
-const findClass = async (id) => {
-  const select = "SELECT * FROM class WHERE idClass = ?";
+const findClassById = async (id) => {
+  const select = "SELECT * FROM Class WHERE idClass = ?";
   const [result] = await pool.query(select, [id]);
   console.log(result);
   if (result.length === 0) {
@@ -16,34 +16,33 @@ const findClass = async (id) => {
   }
   return result[0];
 };
-const createClass = async (nombre) => {
-  const insert = "INSERT INTO class ( name) VALUES( ?)";
-  const [result] = await pool.query(insert, [nombre]);
+const findClassByName = async (name) => {
+  const select = "SELECT * FROM Class WHERE name = ?";
+  const [result] = await pool.query(select, [name]);
+  console.log(result);
+  if (result.length === 0) {
+    return false;
+  }
+  return result[0];
+};
+
+const createClass = async (name) => {
+  const insert = "INSERT INTO Class (name) VALUES (?) ";
+  const [result] = await pool.query(insert, [name]);
   return result;
 };
 
 //editar nombre de clase
-const modificarClass = async (id, datos) => {
-  const { nombre } = datos;
-  console.log(id, nombre);
-  try {
-    const update = "UPDATE class SET name = ? WHERE idClass = ? ";
-    const [result] = await pool.query(update, [nombre, id]);
-    console.log(result);
-    if (result.affectedRows === 0) {
-      return false;
-    }
-    return result;
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error del servidor para modificar la clase" });
-  }
+const updateClass = async (name, id) => {
+  const update = "UPDATE Class SET name = ? WHERE idClass = ? ";
+  const [result] = await pool.query(update, [name, id]);
+  return result;
 };
+
 //eliminar una clase
 const eliminarClass = async (id) => {
   try {
-    const eliminar = "DELETE FROM class WHERE idClass = ? ";
+    const eliminar = "DELETE FROM Class WHERE idClass = ? ";
     const [result] = await pool.query(eliminar, id);
     console.log(result);
   } catch (error) {
@@ -54,7 +53,8 @@ const eliminarClass = async (id) => {
 module.exports = {
   selectAll,
   createClass,
-  findClass,
-  modificarClass,
+  findClassById,
+  findClassByName,
+  updateClass,
   eliminarClass,
 };

@@ -5,17 +5,17 @@ const classController = require("../../controllers/class.controllers");
 
 //endpoints para:
 // /api/class/
-router.get("/", classController.getAllClasses);
+router.get("/list", classController.getAllClasses);
 // /api/class/id
 router.get("/:id", classController.findClassById);
 
 // /api/class/
-router.post("/", classController.newClass);
+router.post("/create", classController.newClass);
 //Editar nombre de la clase
 
 //update class
-router.patch("/:id", classController.updateClass);
+router.patch("/update/:id", classController.updateClass);
 
-router.delete("/:id", classController.deleteClass);
+router.delete("/delete/:id", classController.deleteClass);
 
 module.exports = router;
