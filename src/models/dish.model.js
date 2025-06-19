@@ -5,7 +5,8 @@ const pool = require("../config/conexion");
 
 // Crear plato
 const createDish = async (name, dish_type, description) => {
-  const insert = "INSERT INTO Dish (name, dish_type, description) VALUES (?, ?, ?)";
+  const insert =
+    "INSERT INTO Dish (name, dish_type, description) VALUES (?, ?, ?)";
   const [result] = await pool.query(insert, [name, dish_type, description]);
   return { result };
 };
@@ -19,7 +20,7 @@ const findDishByName = async (name) => {
 
 // Obtener todos los platos
 const getAllDishes = async () => {
-  const select = "SELECT * FROM Dish ORDER BY name";
+  const select = "SELECT * FROM Dish WHERE active = TRUE ORDER BY name";
   const [result] = await pool.query(select);
   return result;
 };
@@ -40,7 +41,8 @@ const getDishById = async (id) => {
 
 // Actualizar plato
 const updateDish = async (id, name, dish_type, description) => {
-  const update = "UPDATE Dish SET name = ?, dish_type = ?, description = ? WHERE idDish = ?";
+  const update =
+    "UPDATE Dish SET name = ?, dish_type = ?, description = ? WHERE idDish = ?";
   const [result] = await pool.query(update, [name, dish_type, description, id]);
   return result;
 };
@@ -52,6 +54,14 @@ const deleteDish = async (id) => {
   return result;
 };
 
+//Elimar plato de forma logica (cambiar el estado active a FALSE).
+const deactiveDish = async (id) => {
+  const desactive =
+    "UPDATE Dish SET active = FALSE WHERE idDish = ? AND active = TRUE";
+  const [result] = await pool.query(desactive, [id]);
+  return result;
+};
+
 module.exports = {
   createDish,
   findDishByName,
@@ -59,5 +69,6 @@ module.exports = {
   getDishesByType,
   getDishById,
   updateDish,
-  deleteDish
+  deleteDish,
+  deactiveDish,
 };

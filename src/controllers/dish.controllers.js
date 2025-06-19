@@ -176,10 +176,43 @@ const deleteDish = async (req, res) => {
   }
 };
 
+//Elimar plato de forma logica (cambiar el estado active a FALSE).
+const deactiveDish = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Convertir id a número
+    const dishId = parseInt(id);
+    if (isNaN(dishId)) {
+      return res.status(400).json({
+        error: "ID del plato debe ser un número válido",
+      });
+    }
+    const existingDish = await dishModel.getDishById(dishId);
+    if (!existingDish) {
+      return res.status(404).json({
+        error: "Plato no encontrado",
+      });
+    }
+
+    const result = await dishModel.deactiveDish(dishId);
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ error: "Plato no encontrado o ya inactivo" });
+    }
+    res
+      .status(200)
+      .json({ message: "Plato marcado como inactivo", data: result });
+  } catch (error) {
+    console.error("Error en el servidor a desactivar el plato.", error);
+    res.status(500).json({ success: false, message: "Error interno" });
+  }
+};
 module.exports = {
   createDish,
   getAllDishes,
   getDishesByType,
   updateDish,
   deleteDish,
+  deactiveDish,
 };

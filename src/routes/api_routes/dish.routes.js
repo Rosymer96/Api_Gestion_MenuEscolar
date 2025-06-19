@@ -17,4 +17,8 @@ router.put("/update/:id", dishCon.updateDish);
 // Eliminar plato
 router.delete("/delete/:id", dishCon.deleteDish);
 
-module.exports = router; 
+//Elimar plato de forma logica (cambiar el estado active a FALSE).
+
+router.patch("/deleteLogical/:id", dishCon.deactiveDish);
+
+module.exports = router;
