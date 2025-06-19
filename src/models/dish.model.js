@@ -5,14 +5,9 @@ const pool = require("../config/conexion");
 
 // Crear plato
 const createDish = async (name, dish_type, description) => {
-  // Obtener el siguiente ID disponible
-  const getMaxId = "SELECT COALESCE(MAX(idDish), 0) + 1 as nextId FROM Dish";
-  const [maxResult] = await pool.query(getMaxId);
-  const nextId = maxResult[0].nextId;
-  
-  const insert = "INSERT INTO Dish (idDish, name, dish_type, description) VALUES (?, ?, ?, ?)";
-  const [result] = await pool.query(insert, [nextId, name, dish_type, description]);
-  return { insertId: nextId, ...result };
+  const insert = "INSERT INTO Dish (name, dish_type, description) VALUES (?, ?, ?)";
+  const [result] = await pool.query(insert, [name, dish_type, description]);
+  return { result };
 };
 
 // Buscar plato por nombre
