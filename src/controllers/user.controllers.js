@@ -18,7 +18,7 @@ const registerTutorUser = async (req, res) => {
     //Buscar el dni  en la tabla estudiante
     //si no lo encuentra, avisar que no tiene estudiantes asignados a ese tutor
     const dniInStudent = await userModel.findDniInStudent(dni);
-    if (!dniInStudent || dniInStudent.length === 0) {
+    if (!dniInStudent) {
       return res.status(400).json({
         message:
           "No existen estudiantes con este documento de tutor registrado",

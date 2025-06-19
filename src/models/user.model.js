@@ -12,7 +12,7 @@ const findDniInStudent = async (tutorDni) => {
   if (result.length === 0) {
     return false;
   }
-  return result;
+  return result[0];
 };
 
 //Revisar si el campo id_tutor en tabla student esta lleno.
@@ -23,7 +23,7 @@ const checkTutorId = async (tutorId) => {
   if (result.length === 0) {
     return false;
   }
-  return result;
+  return result[0];
 };
 //Guardar el id de tutor en los estudiantes relacionados.
 const saveTutorId = async (newTutorId, tutorDni) => {
