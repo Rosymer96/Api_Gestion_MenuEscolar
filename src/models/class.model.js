@@ -25,17 +25,29 @@ const createClass = async (nombre) => {
 //editar nombre de clase
 const modificarClass = async (id, datos) => {
   const { nombre } = datos;
-  console.log(id , nombre)
+  console.log(id, nombre);
   try {
-    const update = "UPDATE class SET nombre = ? WHERE idClass = ? ";
-    const [result] = await pool.query(update, [nombre, id ]);
+    const update = "UPDATE class SET name = ? WHERE idClass = ? ";
+    const [result] = await pool.query(update, [nombre, id]);
     console.log(result);
     if (result.affectedRows === 0) {
       return false;
     }
     return result;
   } catch (error) {
-    res.json(error);
+    res
+      .status(500)
+      .json({ error: "Error del servidor para modificar la clase" });
+  }
+};
+//eliminar una clase
+const eliminarClass = async (id) => {
+  try {
+    const eliminar = "DELETE FROM class WHERE idClass = ? ";
+    const [result] = await pool.query(eliminar, id);
+    console.log(result);
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -44,4 +56,5 @@ module.exports = {
   createClass,
   findClass,
   modificarClass,
+  eliminarClass,
 };

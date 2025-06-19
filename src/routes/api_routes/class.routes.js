@@ -16,6 +16,6 @@ router.post("/", classController.newClass);
 //update class
 router.patch("/:id", classController.updateClass);
 
-// router.delete("/:id", classController.deleteClass);
+router.delete("/:id", classController.deleteClass);
 
 module.exports = router;
