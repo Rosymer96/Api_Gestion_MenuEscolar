@@ -43,13 +43,37 @@ const deleteMenuDishes = async (menuId) => {
 
 const deleteMenu = async (menuId) => {
   const deleteMEnu = "DELETE FROM Menu WHERE idMenu = ?";
-  return await pool.query(deleteMEnu, [menuId]);
+  const [result] = await pool.query(deleteMEnu, [menuId]);
+  return result;
 };
 
+//Obtener plato por id:
+
+const selectDishById = async (id) => {
+  const select = "SELECT * FROM Dish WHERE idDish = ?";
+  const [result] = await pool.query(select, [id]);
+  return result[0];
+};
+
+//obtener plato existente en la fecha y la clase
+const selectMenuInClassByDate = async (classId, date) => {
+  const select = "SELECT * FROM Menu WHERE class_id = ? AND date = ?";
+  const [result] = await pool.query(select, [classId, date]);
+  return result[0];
+};
+
+const selectMenuById = async (idMenu) => {
+  const select = "SELECT * FROM Menu WHERE idMenu = ?";
+  const [result] = await pool.query(select, [idMenu]);
+  return result[0];
+};
 module.exports = {
   insertMenu,
   insertMenuDish,
   listMenuByMonth,
   deleteMenuDishes,
   deleteMenu,
+  selectDishById,
+  selectMenuInClassByDate,
+  selectMenuById,
 };

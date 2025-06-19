@@ -1,3 +1,4 @@
+const e = require("cors");
 const menuModel = require("../models/menu.model");
 
 //Crear el menu asignandole 3 platos, fecha y la clase.
@@ -10,14 +11,33 @@ const createMenu = async (req, res) => {
         .status(400)
         .json({ error: "Todos los campos son obligatorios" });
     }
+
+    //Verificar si los platos existen
+    const dishIds = [firstId, secondId, dessertId];
+
+    //Verificar si ya hay un menu con esa fecha y classId:
+    const existingMenu = await menuModel.selectMenuInClassByDate(classId, date);
+    if (existingMenu) {
+      res.status(404).json({
+        error: "Ya existe un menu asignado a esta clase en esta fecha.",
+      });
+    }
+    for (const dishId of dishIds) {
+      const dish = await menuModel.selectDishById(dishId);
+      if (!dish) {
+        return res.status(404).json({
+          error: "Plato no encontrado",
+        });
+      }
+    }
+
     //fecha y clase a tabla Menu
 
     const menu = await menuModel.insertMenu(date, classId);
     const menuId = menu.insertId;
     //menuId y platos a tabla MenuDish
-    const dishIds = [firstId, secondId, dessertId];
-    for (const dish of dishIds) {
-      await menuModel.insertMenuDish(menuId, dish);
+    for (const dishId of dishIds) {
+      await menuModel.insertMenuDish(menuId, dishId);
     }
     res.status(201).json({
       message: "Menu creado correctamente",
@@ -47,23 +67,29 @@ const listByClassMonth = async (req, res) => {
 
     const menus = await menuModel.listMenuByMonth(classId, startDate, endDate);
     //Ordenar la data para que el frontend lareciba limpia y ordenada:
-
+    if (menus.length === 0) {
+      return res.status(404).json({
+        error: "No existen platos registrados durante este mes.",
+      });
+    }
     const menuByDays = {};
     for (const menu of menus) {
-      //Quitarle la hora a la fecha que recibimos de la BD.
-      const formattedDate = new Date(menu.date).toISOString().split("T")[0];
-
-      if (!menuByDays[formattedDate]) {
-        menuByDays[formattedDate] = {
-          date: formattedDate,
+      if (!menuByDays[menu.date]) {
+        menuByDays[menu.date] = {
+          date: menu.date,
           dishes: [],
         };
       }
-      menuByDays[formattedDate].dishes.push(menu.dish);
+      menuByDays[menu.date].dishes.push(menu.dish);
     }
 
     console.log("Menus devueltos:", menuByDays, classId, startDate, endDate);
-    res.status(200).json({ message: "Success", Menus: menuByDays });
+    res.status(200).json({
+      message: "Success",
+      dateRange: { start: startDate, end: endDate },
+      classId: classId,
+      menus: menuByDays,
+    });
   } catch (error) {
     console.error("Error en el servidor al listar el menu:", error);
     res.status(500).json({ error: "Error del servidor." });
@@ -78,6 +104,14 @@ const updateMenu = async (req, res) => {
       return res
         .status(400)
         .json({ error: "Todos los campos son obligatorios" });
+    }
+    //Verificamos si existe el menu
+
+    const existingMenu = await menuModel.selectMenuById(menuId);
+    if (!existingMenu) {
+      return res.status(404).json({
+        error: "No existe un menú con este ID.",
+      });
     }
 
     //Borrar los platos anteriores del menu:
@@ -106,6 +140,15 @@ const deleteMenu = async (req, res) => {
         .status(400)
         .json({ error: "Enviar el menuId es obligatorio." });
     }
+    //Verificamos si existe el menu
+
+    const existingMenu = await menuModel.selectMenuById(menuId);
+    if (!existingMenu) {
+      return res.status(404).json({
+        error: "No existe un menú con este ID.",
+      });
+    }
+
     //Borrar todos los platos asociados a este menuId de MenuDish:
     await menuModel.deleteMenuDishes(menuId);
     //Borrar el menu de la tabla Menu:

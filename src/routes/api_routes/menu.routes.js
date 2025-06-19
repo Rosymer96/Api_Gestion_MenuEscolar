@@ -6,7 +6,7 @@ const menuCon = require("../../controllers/menu.controllers");
 router.post("/create", menuCon.createMenu);
 
 //Listar menu por clase recibe un queryparams
-router.post("/list/:classId", menuCon.listByClassMonth);
+router.get("/list/:classId", menuCon.listByClassMonth);
 //Editar el menu
 router.put("/update", menuCon.updateMenu);
 //Borrar Menu
