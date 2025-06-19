@@ -10,19 +10,11 @@ const selectAll = async () => {
 const findClassById = async (id) => {
   const select = "SELECT * FROM Class WHERE idClass = ?";
   const [result] = await pool.query(select, [id]);
-  console.log(result);
-  if (result.length === 0) {
-    return false;
-  }
   return result[0];
 };
 const findClassByName = async (name) => {
   const select = "SELECT * FROM Class WHERE name = ?";
   const [result] = await pool.query(select, [name]);
-  console.log(result);
-  if (result.length === 0) {
-    return false;
-  }
   return result[0];
 };
 
@@ -40,14 +32,10 @@ const updateClass = async (name, id) => {
 };
 
 //eliminar una clase
-const eliminarClass = async (id) => {
-  try {
-    const eliminar = "DELETE FROM Class WHERE idClass = ? ";
-    const [result] = await pool.query(eliminar, id);
-    console.log(result);
-  } catch (error) {
-    console.log(error);
-  }
+const deleteClass = async (id) => {
+  const deleteClass = "DELETE FROM Class WHERE idClass = ? ";
+  const [result] = await pool.query(deleteClass, id);
+  return result;
 };
 
 module.exports = {
@@ -56,5 +44,5 @@ module.exports = {
   findClassById,
   findClassByName,
   updateClass,
-  eliminarClass,
+  deleteClass,
 };

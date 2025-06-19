@@ -128,7 +128,7 @@ const deleteClass = async (req, res) => {
       });
     }
 
-    const deletedClass = await classModels.eliminarClass(id);
+    const deletedClass = await classModels.deleteClass(id);
     res.status(200).json({
       message: "Clase eliminada con exito ",
       data: deletedClass,
