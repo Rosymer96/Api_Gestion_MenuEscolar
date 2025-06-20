@@ -8,6 +8,12 @@ const findByDni = async (studentDni) => {
   return result[0];
 };
 
+const findById = async (id) => {
+  const selectById = "SELECT * FROM Student WHERE idStudent = ?";
+  const [result] = await pool.query(selectById, [id]);
+  return result[0];
+};
+
 const addStudent = async (name, studentDni, classId, tutorDni) => {
   const insert =
     "INSERT INTO Student (name, student_dni, class_id, tutor_dni) VALUES (?,?,?,?)";
@@ -49,10 +55,18 @@ const reactivateStudent = async (dni) => {
   return result;
 };
 
+const listStudentsByClass = async (classId) => {
+  const query = "SELECT * FROM Student WHERE class_id = ?";
+  const [result] = await pool.query(query, [classId]);
+  return result;
+};
+
 module.exports = {
   addStudent,
   findByDni,
   desactiveStudent,
   reactivateStudent,
   editStudentDB,
+  findById,
+  listStudentsByClass 
 };
