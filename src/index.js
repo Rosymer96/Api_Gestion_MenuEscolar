@@ -11,7 +11,7 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 
-server.use("/api", router);   //Descomentar cuando creen sus endpoints si mandara error.
+server.use("/api", router);   
 
 // puerto a traves de cual escucho
 const PORT = 3500;
