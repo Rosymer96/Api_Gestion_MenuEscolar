@@ -31,12 +31,27 @@ router.get(
 );
 
 //Listar los usuarios por rol
-router.get("/listTutors", userCon.listTutors);
+router.get(
+  "/listTutors",
+  auth.checkToken,
+  auth.authorizeRoles("administrador"),
+  userCon.listTutors
+);
 //Editar el usuario
 
-router.patch("/:id/update", userCon.updateUser);
+router.patch(
+  "/:id/update",
+  auth.checkToken,
+  auth.authorizeRoles("administrador"),
+  userCon.updateUser
+);
 
 //Eliminar el usuario(borrar el tutorid asociado al estudiante).
-router.patch("/:id/delete", userCon.deleteUser);
+router.patch(
+  "/:id/delete",
+  auth.checkToken,
+  auth.authorizeRoles("administrador"),
+  userCon.deleteUser
+);
 
 module.exports = router;
