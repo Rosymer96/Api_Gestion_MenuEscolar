@@ -98,7 +98,8 @@ const listByClassMonth = async (req, res) => {
 //Editar el menu
 const updateMenu = async (req, res) => {
   try {
-    const { menuId, firstId, secondId, dessertId } = req.body;
+    const { menuId } = req.params;
+    const { firstId, secondId, dessertId } = req.body;
 
     if (!menuId || !firstId || !secondId || !dessertId) {
       return res
