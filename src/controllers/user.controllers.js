@@ -1,3 +1,4 @@
+
 const { JsonWebTokenError } = require("jsonwebtoken");
 const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
@@ -245,3 +246,4 @@ module.exports = {
   softDeleteUser,
   listTutors,
 };
+
