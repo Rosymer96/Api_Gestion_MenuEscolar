@@ -9,10 +9,7 @@ const pool = require("../config/conexion");
 const findDniInStudent = async (tutorDni) => {
   const select = "SELECT * FROM Student WHERE tutor_dni = ?";
   const [result] = await pool.query(select, [tutorDni]);
-  if (result.length === 0) {
-    return false;
-  }
-  return result[0];
+  return result;
 };
 
 //Revisar si el campo id_tutor en tabla student esta lleno.
@@ -71,9 +68,6 @@ const createUser = async (name, email, password, dni, rol) => {
 const selectByEmail = async (email) => {
   const select = "SELECT * FROM User WHERE email = ? AND active = TRUE;";
   const [result] = await pool.query(select, [email]);
-  if (result.length === 0) {
-    return false;
-  }
   return result[0];
 };
 
@@ -82,9 +76,6 @@ const selectByEmail = async (email) => {
 const selectById = async (id) => {
   const select = "SELECT * FROM User WHERE id = ?";
   const [result] = await pool.query(select, [id]);
-  if (result.length === 0) {
-    return false;
-  }
   return result[0];
 };
 

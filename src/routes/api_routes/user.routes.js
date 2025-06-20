@@ -39,19 +39,14 @@ router.get(
 );
 //Editar el usuario
 
-router.patch(
-  "/:id/update",
-  auth.checkToken,
-  auth.authorizeRoles("administrador"),
-  userCon.updateUser
-);
+router.put("/:id", auth.checkToken, userCon.updateUser);
 
 //Eliminar el usuario(borrar el tutorid asociado al estudiante).
 router.patch(
-  "/:id/delete",
+  "/softdelete/:id",
   auth.checkToken,
   auth.authorizeRoles("administrador"),
-  userCon.deleteUser
+  userCon.softDeleteUser
 );
 
 module.exports = router;

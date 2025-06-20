@@ -18,7 +18,8 @@ const registerTutorUser = async (req, res) => {
     //Buscar el dni  en la tabla estudiante
     //si no lo encuentra, avisar que no tiene estudiantes asignados a ese tutor
     const dniInStudent = await userModel.findDniInStudent(dni);
-    if (!dniInStudent) {
+    console.log(dniInStudent);
+    if (dniInStudent.length === 0) {
       return res.status(400).json({
         message:
           "No existen estudiantes con este documento de tutor registrado",
@@ -54,7 +55,7 @@ const registerTutorUser = async (req, res) => {
       newTutorId: newTutor.insertId,
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
@@ -161,10 +162,16 @@ const getProfile = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Usuario no encontrado" });
     }
-    res.status(200).json({ success: true, data: dataUser });
+    const filteredUser = {
+      id: dataUser.id,
+      name: dataUser.name,
+      email: dataUser.email,
+      dni: dataUser.dni,
+    };
+    res.status(200).json({ success: true, data: filteredUser });
     console.log("He llegado al profile");
   } catch (error) {
-    console.error("Error al obtener el perfil del administrador:", error);
+    console.error("Error al obtener el perfil.", error);
     res.status(500).json({ success: false, message: "Error interno" });
   }
 };
@@ -211,7 +218,7 @@ const listTutors = async (req, res) => {
 };
 
 //7.Eliminar usuario
-const deleteUser = async (req, res) => {
+const softDeleteUser = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await userModel.deactiveUser(id);
@@ -235,6 +242,6 @@ module.exports = {
   login,
   getProfile,
   updateUser,
-  deleteUser,
+  softDeleteUser,
   listTutors,
 };
