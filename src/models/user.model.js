@@ -1,10 +1,8 @@
+
 //modelo de datos
 const pool = require("../config/conexion");
 
 //Sql para el CRUD del usuario
-
-//Crear el usuario TUTOR
-// Busqueda de dni en tabla student:
 
 const findDniInStudent = async (tutorDni) => {
   const select = "SELECT * FROM Student WHERE tutor_dni = ?";
@@ -121,3 +119,5 @@ module.exports = {
   deactiveUser,
   selectAllTutors,
 };
+
+

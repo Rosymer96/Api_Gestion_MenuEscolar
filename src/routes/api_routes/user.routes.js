@@ -1,3 +1,4 @@
+
 const router = require("express").Router();
 const userCon = require("../../controllers/user.controllers");
 const auth = require("../../middleware/auth");
@@ -50,3 +51,4 @@ router.patch(
 );
 
 module.exports = router;
+

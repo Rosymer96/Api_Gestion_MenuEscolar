@@ -1,10 +1,12 @@
 const router = require("express").Router();
 
 
-
 router.use("/dish", require("./api_routes/dish.routes"));
 
 router.use("/user", require("./api_routes/user.routes"));
+
+
+router.use("/note", require("./api_routes/note.routes"));
 
 
 router.use("/student", require("./api_routes/student.routes"));
