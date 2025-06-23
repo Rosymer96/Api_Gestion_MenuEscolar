@@ -4,10 +4,10 @@ const pool = require("../config/conexion");
 // SQL para el CRUD de platos
 
 // Crear plato
-const createDish = async (name, dish_type, description) => {
+const createDish = async (name, dishType, description) => {
   const insert =
     "INSERT INTO Dish (name, dish_type, description) VALUES (?, ?, ?)";
-  const [result] = await pool.query(insert, [name, dish_type, description]);
+  const [result] = await pool.query(insert, [name, dishType, description]);
   return { result };
 };
 
@@ -26,9 +26,9 @@ const getAllDishes = async () => {
 };
 
 // Obtener platos por tipo
-const getDishesByType = async (dish_type) => {
+const getDishesByType = async (dishType) => {
   const select = "SELECT * FROM Dish WHERE dish_type = ? ORDER BY name";
-  const [result] = await pool.query(select, [dish_type]);
+  const [result] = await pool.query(select, [dishType]);
   return result;
 };
 
@@ -40,10 +40,10 @@ const getDishById = async (id) => {
 };
 
 // Actualizar plato
-const updateDish = async (id, name, dish_type, description) => {
+const updateDish = async (id, name, dishType, description) => {
   const update =
     "UPDATE Dish SET name = ?, dish_type = ?, description = ? WHERE idDish = ?";
-  const [result] = await pool.query(update, [name, dish_type, description, id]);
+  const [result] = await pool.query(update, [name, dishType, description, id]);
   return result;
 };
 

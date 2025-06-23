@@ -3,12 +3,12 @@ const dishModel = require("../models/dish.model");
 // Crear plato
 const createDish = async (req, res) => {
   try {
-    const { name, dish_type, description } = req.body;
+    const { name, dishType, description } = req.body;
 
-    if (!name || !dish_type || !description) {
+    if (!name || !dishType || !description) {
       return res.status(400).json({
         error:
-          "Todos los campos son obligatorios (name, dish_type, description)",
+          "Todos los campos son obligatorios (name, dishType, description)",
       });
     }
 
@@ -19,8 +19,9 @@ const createDish = async (req, res) => {
         error: "Ya existe un plato con ese nombre",
       });
     }
-    //Agregar el plato:
-    const newDish = await dishModel.createDish(name, dish_type, description);
+
+    // Agregar el plato
+    const newDish = await dishModel.createDish(name, dishType, description);
 
     res.status(201).json({
       message: "Plato creado correctamente",
@@ -51,23 +52,23 @@ const getAllDishes = async (req, res) => {
 // Listar platos por tipo
 const getDishesByType = async (req, res) => {
   try {
-    const { dish_type } = req.params;
+    const { dishType } = req.params;
 
-    if (!dish_type) {
+    if (!dishType) {
       return res.status(400).json({
         error: "El tipo de plato es obligatorio",
       });
     }
     const validTypes = ["primero", "segundo", "postre"];
 
-    if (!validTypes.includes(dish_type)) {
+    if (!validTypes.includes(dishType)) {
       return res.status(400).json({
         error:
           "El tipo de plato no es válido. Debe ser 'primero', 'segundo' o 'postre'.",
       });
     }
 
-    const dishes = await dishModel.getDishesByType(dish_type);
+    const dishes = await dishModel.getDishesByType(dishType);
 
     res.status(200).json({
       success: true,
@@ -84,15 +85,15 @@ const getDishesByType = async (req, res) => {
 const updateDish = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, dish_type, description } = req.body;
+    const { name, dishType, description } = req.body;
 
-    if (!name || !dish_type || !description) {
+    if (!name || !dishType || !description) {
       return res.status(400).json({
         error:
-          "Todos los campos son obligatorios (name, dish_type, description)",
+          "Todos los campos son obligatorios (name, dishType, description)",
       });
     }
-    // Convertir id a número
+
     const dishId = parseInt(id);
     if (isNaN(dishId)) {
       return res.status(400).json({
@@ -100,7 +101,6 @@ const updateDish = async (req, res) => {
       });
     }
 
-    // Verificar si el plato existe
     const existingDish = await dishModel.getDishById(dishId);
     if (!existingDish) {
       return res.status(404).json({
@@ -108,7 +108,6 @@ const updateDish = async (req, res) => {
       });
     }
 
-    // Verificar si ya existe otro plato con ese nombre
     const dishWithSameName = await dishModel.findDishByName(name);
     if (dishWithSameName && dishWithSameName.idDish != dishId) {
       return res.status(409).json({
@@ -119,7 +118,7 @@ const updateDish = async (req, res) => {
     const updatedDish = await dishModel.updateDish(
       dishId,
       name,
-      dish_type,
+      dishType,
       description
     );
 
@@ -143,7 +142,6 @@ const deleteDish = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Convertir id a número
     const dishId = parseInt(id);
     if (isNaN(dishId)) {
       return res.status(400).json({
@@ -151,7 +149,6 @@ const deleteDish = async (req, res) => {
       });
     }
 
-    // Verificar si el plato existe
     const existingDish = await dishModel.getDishById(dishId);
     if (!existingDish) {
       return res.status(404).json({
@@ -176,17 +173,18 @@ const deleteDish = async (req, res) => {
   }
 };
 
-//Elimar plato de forma logica (cambiar el estado active a FALSE).
+// Eliminar plato de forma lógica (cambiar el estado active a FALSE).
 const deactiveDish = async (req, res) => {
   try {
     const { id } = req.params;
-    // Convertir id a número
+
     const dishId = parseInt(id);
     if (isNaN(dishId)) {
       return res.status(400).json({
         error: "ID del plato debe ser un número válido",
       });
     }
+
     const existingDish = await dishModel.getDishById(dishId);
     if (!existingDish) {
       return res.status(404).json({
@@ -200,14 +198,16 @@ const deactiveDish = async (req, res) => {
         .status(404)
         .json({ error: "Plato no encontrado o ya inactivo" });
     }
+
     res
       .status(200)
       .json({ message: "Plato marcado como inactivo", data: result });
   } catch (error) {
-    console.error("Error en el servidor a desactivar el plato.", error);
+    console.error("Error en el servidor al desactivar el plato.", error);
     res.status(500).json({ success: false, message: "Error interno" });
   }
 };
+
 module.exports = {
   createDish,
   getAllDishes,
