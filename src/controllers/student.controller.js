@@ -157,10 +157,25 @@ const getStudentsByClass = async (req, res) => {
     });
   }
 };
+const getAllStudents = async (req, res) => {
+  try {
+    const students = await studentModel.selectStudents();
+    res.status(200).json({
+      success: true,
+      data: students,
+    });
+  } catch (error) {
+    console.error("Error al listar estudiantes:", error);
+    res.status(500).json({
+      error: "Error del servidor al obtener los estudiantes.",
+    });
+  }
+};
 
 module.exports = {
   registerStudent,
   deleteStudent,
   editStudent,
   getStudentsByClass,
+  getAllStudents,
 };

@@ -61,6 +61,12 @@ const listStudentsByClass = async (classId) => {
   return result;
 };
 
+const selectStudents = async () => {
+  const select = "SELECT * FROM Student";
+  const [result] = await pool.query(select);
+  return result;
+};
+
 module.exports = {
   addStudent,
   findByDni,
@@ -68,5 +74,6 @@ module.exports = {
   reactivateStudent,
   editStudentDB,
   findById,
-  listStudentsByClass 
+  listStudentsByClass,
+  selectStudents,
 };

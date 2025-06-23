@@ -1,5 +1,3 @@
-
-
 const { JsonWebTokenError } = require("jsonwebtoken");
 const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
@@ -124,16 +122,17 @@ const login = async (req, res) => {
     if (!selectedUser) {
       return res
         .status(404)
-        .json({ message: "Email no corresponde a ningun usuario" });
+        .json({ message: "Email no corresponde a ningun usuario." });
     }
     //Convertirmos el password
     const isSame = bcrypt.compareSync(password, selectedUser.password);
     if (!isSame) {
-      return res.status(400).json({ message: "Contraseña incorrecta" });
+      return res.status(400).json({ message: "Contraseña incorrecta." });
     }
     //Creamos la data para enviarla a jwt
     const data = {
       id: selectedUser.id,
+      name: selectedUser.name,
       email: selectedUser.email,
       rol: selectedUser.rol,
     };
@@ -144,6 +143,7 @@ const login = async (req, res) => {
       token,
       user: {
         id: selectedUser.id,
+        name: selectedUser.name,
         email: selectedUser.email,
         rol: selectedUser.rol,
       },
@@ -247,4 +247,3 @@ module.exports = {
   softDeleteUser,
   listTutors,
 };
-

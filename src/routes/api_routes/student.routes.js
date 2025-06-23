@@ -12,4 +12,5 @@ router.patch("/softdelete/:id", student.deleteStudent);
 
 router.put("/:id", student.editStudent);
 router.get("/class/:classId", student.getStudentsByClass);
+router.get ("/list", student.getAllStudents)
 module.exports = router;
