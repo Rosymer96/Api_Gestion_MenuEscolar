@@ -3,7 +3,7 @@ const menuCon = require("../../controllers/menu.controllers");
 const { checkToken, authorizeRoles } = require("../../middleware/auth");
 
 // Aplica el middleware a todas las rutas de nota de menú
-router.use(checkToken, authorizeRoles("tutor")); // solo tutores pueden acceder
+router.use(checkToken, authorizeRoles("administrador")); // solo tutores pueden acceder
 
 //Crear el menu asignandole 3 platos, fecha y la clase.
 
