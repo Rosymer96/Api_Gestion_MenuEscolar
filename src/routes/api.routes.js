@@ -5,7 +5,7 @@ const router = require("express").Router();
 // // router.use("/menu", require("./api_routes/menu.routes"));
 // // router.use("/student", require("./api_routes/class.student"));
 //router.use("/user", require("./api_routes/user.routes"));
-router.use("/menuNote", require("./api_routes/note.routes"));
+router.use("/note", require("./api_routes/note.routes"));
 
 module.exports = router;
 

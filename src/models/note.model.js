@@ -12,20 +12,31 @@ const getNoteByMenuAndTutor = async (menuId, tutorId) => {
 
 // Crear nueva nota
 const createNote = async (menuId, tutorId, note) => {
-  const insert = "INSERT INTO MenuNote (menu_id, tutor_id, note) VALUES (?, ?, ?)";
-  await pool.query(insert, [menuId, tutorId, note]);
+  const insert =
+    "INSERT INTO MenuNote (menu_id, tutor_id, note) VALUES (?, ?, ?)";
+  const [result] = await pool.query(insert, [menuId, tutorId, note]);
+  return result;
+};
+
+//Verificar si existe lanota:
+const selectById = async (noteId) => {
+  const select = "SELECT * FROM MenuNote WHERE idNote = ?";
+  const [result] = await pool.query(select, [noteId]);
+  return result[0]; // Devuelve solo una nota (la primera)
 };
 
 // Actualizar nota existente
-const updateNote = async (menuId, tutorId, note) => {
+const updateNote = async (note, menuId, tutorId) => {
   const update = "UPDATE MenuNote SET note = ? WHERE menu_id = ? AND tutor_id = ?";
-  await pool.query(update, [note, menuId, tutorId]);
+  const [result] = await pool.query(update, [note, menuId, tutorId]);
+  return result;
 };
 
 // Eliminar nota
 const deleteNote = async (menuId, tutorId) => {
   const del = "DELETE FROM MenuNote WHERE menu_id = ? AND tutor_id = ?";
-  await pool.query(del, [menuId, tutorId]);
+  const [result] = await pool.query(del, [menuId, tutorId]);
+  return result;
 };
 
 module.exports = {
@@ -33,4 +44,5 @@ module.exports = {
   createNote,
   updateNote,
   deleteNote,
+  selectById,
 };

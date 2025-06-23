@@ -16,7 +16,7 @@ const getNote = async (req, res) => {
   }
 };
 
-// POST /api/menu-notes
+// POST /api/menu-notes 
 const createNote = async (req, res) => {
   const tutorId = req.userLogin.id;
   const { menuId, note } = req.body;
@@ -33,11 +33,10 @@ const createNote = async (req, res) => {
 // PUT /api/menu-notes/:menuId
 const updateNote = async (req, res) => {
   const tutorId = req.userLogin.id;
-  const { menuId } = req.params;
-  const { note } = req.body;
+ const { menuId, note } = req.body;
 
   try {
-    await menuNoteModel.updateNote(menuId, tutorId, note);
+    await menuNoteModel.updateNote(note, menuId, tutorId);
     res.status(200).json({ message: "Nota actualizada correctamente" });
   } catch (err) {
     console.error(err);
