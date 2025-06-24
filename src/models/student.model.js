@@ -67,6 +67,12 @@ const selectStudents = async () => {
   return result;
 };
 
+const listStudentsByTutorId= async (id) => {
+  const select = "SELECT * FROM Student WHERE tutor_id = ? AND activo = 1";
+  const [result] = await pool.query(select, [id]);
+  return result;
+};
+
 module.exports = {
   addStudent,
   findByDni,
@@ -76,4 +82,5 @@ module.exports = {
   findById,
   listStudentsByClass,
   selectStudents,
+  listStudentsByTutorId,
 };

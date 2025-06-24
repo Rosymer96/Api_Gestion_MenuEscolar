@@ -172,10 +172,41 @@ const getAllStudents = async (req, res) => {
   }
 };
 
+const getStudentsByTutorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        error: "El parámetro id es obligatorio",
+      });
+    }
+
+    const students = await studentModel.listStudentsByTutorId(id);
+
+    if (students.length === 0) {
+      return res.status(404).json({
+        message: "No se encontraron estudiantes para este tutor",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: students,
+    });
+  } catch (error) {
+    console.error("Error al listar estudiantes por tutor:", error);
+    res.status(500).json({
+      error: "Error del servidor al obtener los estudiantes por tutor",
+    });
+  }
+};
+
 module.exports = {
   registerStudent,
   deleteStudent,
   editStudent,
   getStudentsByClass,
   getAllStudents,
+  getStudentsByTutorId,
 };
