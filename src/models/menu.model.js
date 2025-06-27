@@ -67,6 +67,22 @@ const selectMenuById = async (idMenu) => {
   const [result] = await pool.query(select, [idMenu]);
   return result[0];
 };
+
+const getDishesByMenuId = async (menuId) => {
+  const select = `
+    SELECT 
+      d.idDish AS id, 
+      d.name, 
+      d.dish_type, 
+      d.description
+    FROM MenuDish md
+    JOIN Dish d ON md.dish_id = d.idDish
+    WHERE md.menu_id = ?`;
+
+  const [result] = await pool.query(select, [menuId]);
+  return result;
+};
+
 module.exports = {
   insertMenu,
   insertMenuDish,
@@ -76,4 +92,5 @@ module.exports = {
   selectDishById,
   selectMenuInClassByDate,
   selectMenuById,
+  getDishesByMenuId,
 };

@@ -49,6 +49,42 @@ const createMenu = async (req, res) => {
   }
 };
 
+//Select menu por clase y fecha:
+
+const getMenuByClassAndDate = async (req, res) => {
+  try {
+    const { classId, date } = req.query;
+
+    if (!classId || !date) {
+      return res.status(400).json({
+        error: "Se requiere classId y date para obtener el menú.",
+      });
+    }
+
+    const menu = await menuModel.selectMenuInClassByDate(classId, date);
+
+    if (!menu) {
+      return res.status(404).json({
+        error: "No se encontró un menú para esa clase y fecha.",
+      });
+    }
+
+    const dishes = await menuModel.getDishesByMenuId(menu.idMenu);
+
+    res.status(200).json({
+      menuId: menu.idMenu,
+      classId: menu.class_id,
+      date: menu.date,
+      dishes,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Error del servidor al obtener el menú.",
+    });
+  }
+};
+
 //Listar menu por clase
 const listByClassMonth = async (req, res) => {
   try {
@@ -82,13 +118,14 @@ const listByClassMonth = async (req, res) => {
       }
       menuByDays[menu.date].dishes.push(menu.dish);
     }
+    const menusArray = Object.values(menuByDays);
 
     console.log("Menus devueltos:", menuByDays, classId, startDate, endDate);
     res.status(200).json({
       message: "Success",
       dateRange: { start: startDate, end: endDate },
       classId: classId,
-      menus: menuByDays,
+      menus: menusArray,
     });
   } catch (error) {
     console.error("Error en el servidor al listar el menu:", error);
@@ -161,4 +198,10 @@ const deleteMenu = async (req, res) => {
   }
 };
 
-module.exports = { createMenu, listByClassMonth, updateMenu, deleteMenu };
+module.exports = {
+  createMenu,
+  listByClassMonth,
+  updateMenu,
+  deleteMenu,
+  getMenuByClassAndDate,
+};

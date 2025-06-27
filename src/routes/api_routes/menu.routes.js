@@ -9,6 +9,9 @@ router.use(checkToken, authorizeRoles("administrador")); // solo tutores pueden 
 
 router.post("/create", menuCon.createMenu);
 
+// Obtener menú por clase y fecha (query: ?classId=1&date=YYYY-MM-DD)
+router.get("/byClassAndDate", menuCon.getMenuByClassAndDate);
+
 //Listar menu por clase recibe un queryparams
 router.get("/listByClass/:classId", menuCon.listByClassMonth);
 //Editar el menu
