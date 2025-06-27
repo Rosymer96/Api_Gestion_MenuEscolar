@@ -77,7 +77,8 @@ const getDishesByMenuId = async (menuId) => {
       d.description
     FROM MenuDish md
     JOIN Dish d ON md.dish_id = d.idDish
-    WHERE md.menu_id = ?`;
+    WHERE md.menu_id = ?
+    ORDER BY FIELD(d.dish_type, 'primero', 'segundo', 'postre')`;
 
   const [result] = await pool.query(select, [menuId]);
   return result;
