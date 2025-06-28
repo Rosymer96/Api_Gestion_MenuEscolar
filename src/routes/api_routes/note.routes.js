@@ -7,8 +7,9 @@ const { checkToken, authorizeRoles } = require("../../middleware/auth");
 router.use(checkToken, authorizeRoles("tutor")); // solo tutores pueden acceder
 
 router.get("/:menuId", menuNoteController.getNote);
-router.post("/", menuNoteController.createNote);
+router.post("/create", menuNoteController.createNote);
 router.put("/", menuNoteController.updateNote);
 router.delete("/:menuId", menuNoteController.deleteNote);
+router.post("/save", menuNoteController.saveNote);
 
 module.exports = router;

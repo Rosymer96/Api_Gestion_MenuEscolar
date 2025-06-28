@@ -18,7 +18,7 @@ const createMenu = async (req, res) => {
     //Verificar si ya hay un menu con esa fecha y classId:
     const existingMenu = await menuModel.selectMenuInClassByDate(classId, date);
     if (existingMenu) {
-      res.status(404).json({
+      return res.status(404).json({
         error: "Ya existe un menu asignado a esta clase en esta fecha.",
       });
     }
@@ -39,9 +39,13 @@ const createMenu = async (req, res) => {
     for (const dishId of dishIds) {
       await menuModel.insertMenuDish(menuId, dishId);
     }
+
+    const menuComplete = await menuModel.getDishesByMenuId(menuId);
     res.status(201).json({
       message: "Menu creado correctamente",
-      newMenu: menuId, //Consultar que es lo que debo devolver?
+      menuId: menuId,
+      date: date,
+      menu: menuComplete,
     });
   } catch (error) {
     console.error(error);
@@ -70,6 +74,7 @@ const getMenuByClassAndDate = async (req, res) => {
     }
 
     const dishes = await menuModel.getDishesByMenuId(menu.idMenu);
+    console.log(dishes);
 
     res.status(200).json({
       menuId: menu.idMenu,
@@ -113,10 +118,16 @@ const listByClassMonth = async (req, res) => {
       if (!menuByDays[menu.date]) {
         menuByDays[menu.date] = {
           date: menu.date,
+          id: menu.idMenu,
           dishes: [],
         };
       }
-      menuByDays[menu.date].dishes.push(menu.dish);
+      menuByDays[menu.date].dishes.push({
+        id: menu.id,
+        name: menu.dish,
+        dish_type: menu.dish_type,
+        description: menu.description,
+      });
     }
     const menusArray = Object.values(menuByDays);
 
@@ -160,7 +171,14 @@ const updateMenu = async (req, res) => {
     for (const dish of newDishes) {
       await menuModel.insertMenuDish(menuId, dish);
     }
-    res.status(200).json({ message: "Menú actualizado correctamente" });
+    const menuEdited = await menuModel.getDishesByMenuId(menuId);
+
+    res.status(200).json({
+      message: "Menu creado correctamente",
+      menuId: menuId,
+      date: existingMenu.date,
+      menu: menuEdited,
+    });
   } catch (error) {
     console.error(error);
     res
