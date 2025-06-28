@@ -123,7 +123,7 @@ const listByClassMonth = async (req, res) => {
         };
       }
       menuByDays[menu.date].dishes.push({
-        id: menu.id,
+        idDish: menu.id,
         name: menu.dish,
         dish_type: menu.dish_type,
         description: menu.description,
