@@ -186,7 +186,7 @@ const getStudentsByTutorId = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: students,
+      students: students,
     });
   } catch (error) {
     console.error("Error al listar estudiantes por tutor:", error);
