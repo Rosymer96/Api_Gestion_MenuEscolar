@@ -174,15 +174,9 @@ const getAllStudents = async (req, res) => {
 
 const getStudentsByTutorId = async (req, res) => {
   try {
-    const { id } = req.params;
+  const tutorId = req.userLogin.id; //viene del middelware
 
-    if (!id) {
-      return res.status(400).json({
-        error: "El parámetro id es obligatorio",
-      });
-    }
-
-    const students = await studentModel.listStudentsByTutorId(id);
+    const students = await studentModel.listStudentsByTutorId(tutorId);
 
     if (students.length === 0) {
       return res.status(404).json({
