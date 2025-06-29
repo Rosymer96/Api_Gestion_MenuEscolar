@@ -67,8 +67,21 @@ const selectStudents = async () => {
   return result;
 };
 
-const listStudentsByTutorId= async (id) => {
-  const select = "SELECT * FROM Student WHERE tutor_id = ? AND activo = 1";
+const listStudentsByTutorId = async (id) => {
+  const select = `
+    SELECT 
+      s.idStudent, 
+      s.name, 
+      s.student_dni, 
+      s.class_id, 
+      s.tutor_dni, 
+      s.tutor_id, 
+      s.activo,
+      c.name AS class_name
+    FROM Student s
+    JOIN Class c ON s.class_id = c.idClass
+    WHERE s.tutor_id = ? AND s.activo = 1
+  `;
   const [result] = await pool.query(select, [id]);
   return result;
 };
