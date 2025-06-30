@@ -60,11 +60,19 @@ const updateDish = async (id, name, dishType, description, active) => {
 };
 
 // Eliminar plato (eliminación real, no soft delete)
+// Eliminación real del plato y sus referencias en MenuDish
 const deleteDish = async (id) => {
-  const deleteQuery = "DELETE FROM Dish WHERE idDish = ?";
-  const [result] = await pool.query(deleteQuery, [id]);
+  // Primero elimina las referencias en MenuDish
+  const deleteReferencesQuery = "DELETE FROM MenuDish WHERE dish_id = ?";
+  await pool.query(deleteReferencesQuery, [id]);
+
+  // Luego elimina el plato en sí
+  const deleteDishQuery = "DELETE FROM Dish WHERE idDish = ?";
+  const [result] = await pool.query(deleteDishQuery, [id]);
+
   return result;
 };
+
 
 //Elimar plato de forma logica (cambiar el estado active a FALSE).
 const deactiveDish = async (id) => {

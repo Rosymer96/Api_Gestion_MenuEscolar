@@ -11,6 +11,7 @@ router.use(checkToken, authorizeRoles("administrador")); // solo tutores pueden 
 // Crear plato
 router.post("/create", dishCon.createDish);
 
+
 // Listar todos los platos
 router.get("/list", dishCon.getAllDishes);
 
