@@ -18,11 +18,11 @@ const registerTutorUser = async (req, res) => {
     //Buscar el dni  en la tabla estudiante
     //si no lo encuentra, avisar que no tiene estudiantes asignados a ese tutor
     const dniInStudent = await userModel.findDniInStudent(dni);
-    console.log(dniInStudent);
+
     if (dniInStudent.length === 0) {
       return res.status(400).json({
         message:
-          "No existen estudiantes con este documento de tutor registrado",
+          "No existen estudiantes con este documento de tutor registrado.",
       });
     }
     //Si lo encuentra revisa si  ya tiene tutor_id asignado y avisa que ya hay una cuenta con ese dni o documento.
@@ -30,7 +30,7 @@ const registerTutorUser = async (req, res) => {
     const alreadyLinked = dniInStudent.some((s) => s.tutor_id !== null);
     if (alreadyLinked) {
       return res.status(409).json({
-        error: "Ya existe una cuenta asociada a este documento de tutor",
+        message: "Ya existe una cuenta asociada a este documento de tutor.",
       });
     }
     //Si esta vacio el id_tutor, te crea la cuenta
@@ -46,16 +46,14 @@ const registerTutorUser = async (req, res) => {
       rol
     );
     //guarda el id de usuario en el tutor_id de la  tabla estudiante.
-    console.log("Resultado de createUser:", newTutor);
 
     await userModel.saveTutorId(newTutor.insertId, dni);
 
     res.status(201).json({
-      message: "Tutor registrado y estudiantes relacionados correctamente",
+      message: "Tutor registrado y estudiantes relacionados correctamente.",
       newTutorId: newTutor.insertId,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
@@ -168,7 +166,7 @@ const getProfile = async (req, res) => {
       id: dataUser.id,
       name: dataUser.name,
       email: dataUser.email,
-      dni: dataUser.dni,
+      rol: dataUser.rol,
     };
     res.status(200).json({ success: true, data: filteredUser });
     console.log("He llegado al profile");

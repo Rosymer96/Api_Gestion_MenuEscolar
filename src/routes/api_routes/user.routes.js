@@ -1,4 +1,3 @@
-
 const router = require("express").Router();
 const userCon = require("../../controllers/user.controllers");
 const auth = require("../../middleware/auth");
@@ -25,7 +24,7 @@ router.get(
 );
 
 router.get(
-  "/profile/admin",
+  "/profile/administrador",
   auth.checkToken,
   auth.authorizeRoles("administrador"),
   userCon.getProfile
@@ -51,4 +50,3 @@ router.patch(
 );
 
 module.exports = router;
-

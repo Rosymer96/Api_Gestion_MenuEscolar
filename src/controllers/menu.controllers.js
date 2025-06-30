@@ -18,7 +18,7 @@ const createMenu = async (req, res) => {
     //Verificar si ya hay un menu con esa fecha y classId:
     const existingMenu = await menuModel.selectMenuInClassByDate(classId, date);
     if (existingMenu) {
-      res.status(404).json({
+      return res.status(404).json({
         error: "Ya existe un menu asignado a esta clase en esta fecha.",
       });
     }
@@ -39,13 +39,54 @@ const createMenu = async (req, res) => {
     for (const dishId of dishIds) {
       await menuModel.insertMenuDish(menuId, dishId);
     }
+
+    const menuComplete = await menuModel.getDishesByMenuId(menuId);
     res.status(201).json({
       message: "Menu creado correctamente",
-      newMenu: menuId, //Consultar que es lo que debo devolver?
+      menuId: menuId,
+      date: date,
+      menu: menuComplete,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error en el servidor al crear al menu" });
+  }
+};
+
+//Select menu por clase y fecha:
+
+const getMenuByClassAndDate = async (req, res) => {
+  try {
+    const { classId, date } = req.query;
+
+    if (!classId || !date) {
+      return res.status(400).json({
+        error: "Se requiere classId y date para obtener el menú.",
+      });
+    }
+
+    const menu = await menuModel.selectMenuInClassByDate(classId, date);
+
+    if (!menu) {
+      return res.status(404).json({
+        error: "No se encontró un menú para esa clase y fecha.",
+      });
+    }
+
+    const dishes = await menuModel.getDishesByMenuId(menu.idMenu);
+    console.log(dishes);
+
+    res.status(200).json({
+      menuId: menu.idMenu,
+      classId: menu.class_id,
+      date: menu.date,
+      dishes,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Error del servidor al obtener el menú.",
+    });
   }
 };
 
@@ -77,18 +118,25 @@ const listByClassMonth = async (req, res) => {
       if (!menuByDays[menu.date]) {
         menuByDays[menu.date] = {
           date: menu.date,
+          id: menu.idMenu,
           dishes: [],
         };
       }
-      menuByDays[menu.date].dishes.push(menu.dish);
+      menuByDays[menu.date].dishes.push({
+        idDish: menu.id,
+        name: menu.dish,
+        dish_type: menu.dish_type,
+        description: menu.description,
+      });
     }
+    const menusArray = Object.values(menuByDays);
 
     console.log("Menus devueltos:", menuByDays, classId, startDate, endDate);
     res.status(200).json({
       message: "Success",
       dateRange: { start: startDate, end: endDate },
       classId: classId,
-      menus: menuByDays,
+      menus: menusArray,
     });
   } catch (error) {
     console.error("Error en el servidor al listar el menu:", error);
@@ -123,7 +171,14 @@ const updateMenu = async (req, res) => {
     for (const dish of newDishes) {
       await menuModel.insertMenuDish(menuId, dish);
     }
-    res.status(200).json({ message: "Menú actualizado correctamente" });
+    const menuEdited = await menuModel.getDishesByMenuId(menuId);
+
+    res.status(200).json({
+      message: "Menu creado correctamente",
+      menuId: menuId,
+      date: existingMenu.date,
+      menu: menuEdited,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -161,4 +216,10 @@ const deleteMenu = async (req, res) => {
   }
 };
 
-module.exports = { createMenu, listByClassMonth, updateMenu, deleteMenu };
+module.exports = {
+  createMenu,
+  listByClassMonth,
+  updateMenu,
+  deleteMenu,
+  getMenuByClassAndDate,
+};
