@@ -36,6 +36,20 @@ const createDish = async (req, res) => {
 // Listar todos los platos
 const getAllDishes = async (req, res) => {
   try {
+    const dishes = await dishModel.getAllDishesActive();
+
+    res.status(200).json({
+      success: true,
+      data: dishes,
+      count: dishes.length,
+    });
+  } catch (error) {
+    console.error("Error en getAllDishes:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+const getAllDishesActive = async (req, res) => {
+  try {
     const dishes = await dishModel.getAllDishes();
 
     res.status(200).json({
@@ -85,7 +99,7 @@ const getDishesByType = async (req, res) => {
 const updateDish = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, dishType, description } = req.body;
+    const { name, dishType, description, active } = req.body;
 
     if (!name || !dishType || !description) {
       return res.status(400).json({
@@ -119,7 +133,8 @@ const updateDish = async (req, res) => {
       dishId,
       name,
       dishType,
-      description
+      description,
+      active
     );
 
     if (updatedDish.affectedRows === 0) {
@@ -215,4 +230,5 @@ module.exports = {
   updateDish,
   deleteDish,
   deactiveDish,
+  getAllDishesActive,
 };

@@ -14,6 +14,9 @@ router.post("/create", dishCon.createDish);
 // Listar todos los platos
 router.get("/list", dishCon.getAllDishes);
 
+// Listar todos los platos activos
+router.get("/list-active", dishCon.getAllDishesActive);
+
 // Listar platos por tipo
 router.get("/listByType/:dishType", dishCon.getDishesByType);
 

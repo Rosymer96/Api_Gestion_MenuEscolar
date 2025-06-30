@@ -20,7 +20,13 @@ const findDishByName = async (name) => {
 
 // Obtener todos los platos
 const getAllDishes = async () => {
-  const select = "SELECT * FROM Dish WHERE active = TRUE ORDER BY name";
+  const select = "SELECT * FROM Dish ORDER BY name";
+  const [result] = await pool.query(select);
+  return result;
+};
+
+const getAllDishesActive = async () => {
+  const select = "SELECT * FROM Dish WHERE active = 1 ORDER BY name";
   const [result] = await pool.query(select);
   return result;
 };
@@ -40,10 +46,16 @@ const getDishById = async (id) => {
 };
 
 // Actualizar plato
-const updateDish = async (id, name, dishType, description) => {
+const updateDish = async (id, name, dishType, description, active) => {
   const update =
-    "UPDATE Dish SET name = ?, dish_type = ?, description = ? WHERE idDish = ?";
-  const [result] = await pool.query(update, [name, dishType, description, id]);
+    "UPDATE Dish SET name = ?, dish_type = ?, description = ?, active = ? WHERE idDish = ?";
+  const [result] = await pool.query(update, [
+    name,
+    dishType,
+    description,
+    active,
+    id,
+  ]);
   return result;
 };
 
@@ -71,4 +83,5 @@ module.exports = {
   updateDish,
   deleteDish,
   deactiveDish,
+  getAllDishesActive,
 };
