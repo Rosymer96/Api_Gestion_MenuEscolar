@@ -36,7 +36,7 @@ const createDish = async (req, res) => {
 // Listar todos los platos
 const getAllDishes = async (req, res) => {
   try {
-    const dishes = await dishModel.getAllDishesActive();
+    const dishes = await dishModel.getAllDishes();
 
     res.status(200).json({
       success: true,
@@ -50,7 +50,7 @@ const getAllDishes = async (req, res) => {
 };
 const getAllDishesActive = async (req, res) => {
   try {
-    const dishes = await dishModel.getAllDishes();
+    const dishes = await dishModel.getAllDishesActive();
 
     res.status(200).json({
       success: true,

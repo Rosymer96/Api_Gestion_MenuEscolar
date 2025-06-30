@@ -20,7 +20,7 @@ const findDishByName = async (name) => {
 
 // Obtener todos los platos
 const getAllDishes = async () => {
-  const select = "SELECT * FROM Dish ORDER BY name";
+  const select = "SELECT * FROM Dish ORDER BY createdAt DESC";
   const [result] = await pool.query(select);
   return result;
 };
@@ -72,7 +72,6 @@ const deleteDish = async (id) => {
 
   return result;
 };
-
 
 //Elimar plato de forma logica (cambiar el estado active a FALSE).
 const deactiveDish = async (id) => {
