@@ -44,13 +44,13 @@ const editStudentDB = async (id, name, studentDni, classId, tutorDni) => {
 //Eliminar estudiante:
 
 const desactiveStudent = async (id) => {
-  const desactive = "UPDATE Student SET activo = FALSE WHERE idStudent = ?";
+  const desactive = "UPDATE Student SET active = FALSE WHERE idStudent = ?";
   const [result] = await pool.query(desactive, [id]);
   return result;
 };
 
 const reactivateStudent = async (dni) => {
-  const reactive = "UPDATE Student SET activo = TRUE WHERE student_dni = ?";
+  const reactive = "UPDATE Student SET active = TRUE WHERE idStudent = ?";
   const [result] = await pool.query(reactive, [dni]);
   return result;
 };
@@ -66,6 +66,11 @@ const selectStudents = async () => {
   const [result] = await pool.query(select);
   return result;
 };
+const deleteStudent = async (id) => {
+  const query = "DELETE FROM Student WHERE idStudent = ?";
+  const [result] = await pool.query(query, [id]);
+  return result;
+};
 
 const listStudentsByTutorId = async (id) => {
   const select = `
@@ -76,7 +81,7 @@ const listStudentsByTutorId = async (id) => {
       s.class_id, 
       s.tutor_dni, 
       s.tutor_id, 
-      s.activo,
+      s.active,
       c.name AS class_name
     FROM Student s
     JOIN Class c ON s.class_id = c.idClass
@@ -95,5 +100,5 @@ module.exports = {
   findById,
   listStudentsByClass,
   selectStudents,
-  listStudentsByTutorId,
+  listStudentsByTutorId,deleteStudent
 };

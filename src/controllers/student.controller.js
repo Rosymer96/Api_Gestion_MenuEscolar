@@ -1,4 +1,5 @@
 const studentModel = require("../models/student.model");
+const classModel = require("../models/class.model");
 
 //crear estudiante
 
@@ -98,8 +99,6 @@ const editStudent = async (req, res) => {
   }
 };
 
-//Cambiar el estado activo del estudiante al eliminarlo "de la logica"
-
 const deleteStudent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -111,20 +110,84 @@ const deleteStudent = async (req, res) => {
       });
     }
 
-    const result = await studentModel.desactiveStudent(id);
-    if (result.affectedRows === 0) {
-      return res
-        .status(404)
-        .json({ error: "El estudiande ya se encuentra inactivo" });
-    }
+    const result = await studentModel.deleteStudent(id);
+
     res
       .status(200)
-      .json({ message: "Estudiante marcado como inactivo", data: result });
+      .json({ message: "Estudiante eliminado correctamente.", data: result });
   } catch (error) {
-    console.error("Error al editar estudiante:", error);
+    console.error("Error al eliminar estudiante:", error);
     res
       .status(500)
       .json({ error: "Error del servidor al eliminar el estudiante" });
+  }
+};
+
+// Desactivar estudiante por ID
+const desactiveStudentController = async (req, res) => {
+  try {
+    const { idStudent } = req.body;
+
+    // Validar ID
+    if (!idStudent) {
+      return res
+        .status(400)
+        .json({ error: "El ID del estudiante es obligatorio" });
+    }
+
+    // Verificar si el estudiante existe
+    const existingStudent = await studentModel.findById(idStudent);
+    if (!existingStudent) {
+      return res.status(404).json({ error: "Estudiante no encontrado" });
+    }
+
+    const result = await studentModel.desactiveStudent(idStudent);
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ error: "No se desactivó ningún estudiante" });
+    }
+
+    res.status(200).json({ message: "Estudiante desactivado correctamente" });
+  } catch (error) {
+    console.error("Error al desactivar estudiante:", error);
+    res
+      .status(500)
+      .json({ error: "Error del servidor al desactivar el estudiante" });
+  }
+};
+
+// Reactivar estudiante por DNI
+const reactivateStudentController = async (req, res) => {
+  try {
+    const { idStudent } = req.body;
+
+    // Validar DNI
+    if (!idStudent) {
+      return res
+        .status(400)
+        .json({ error: "El id del estudiante es obligatorio" });
+    }
+
+    // Verificar si el estudiante existe
+    const existingStudent = await studentModel.findById(idStudent);
+    if (!existingStudent) {
+      return res.status(404).json({ error: "Estudiante no encontrado" });
+    }
+
+    const result = await studentModel.reactivateStudent(idStudent);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "No se activó ningún estudiante" });
+    }
+
+    res.status(200).json({ message: "Estudiante reactivado correctamente" });
+  } catch (error) {
+    console.error("Error al reactivar estudiante:", error);
+    res
+      .status(500)
+      .json({ error: "Error del servidor al reactivar el estudiante" });
   }
 };
 
@@ -137,7 +200,7 @@ const getStudentsByClass = async (req, res) => {
         error: "El parámetro classId es obligatorio",
       });
     }
-
+    const className = await classModel.findClassById(classId);
     const students = await studentModel.listStudentsByClass(classId);
 
     if (students.length === 0) {
@@ -148,7 +211,8 @@ const getStudentsByClass = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: students,
+      class: className.name,
+      students: students,
     });
   } catch (error) {
     console.error("Error al listar estudiantes por clase:", error);
@@ -174,7 +238,7 @@ const getAllStudents = async (req, res) => {
 
 const getStudentsByTutorId = async (req, res) => {
   try {
-  const tutorId = req.userLogin.id; //viene del middelware
+    const tutorId = req.userLogin.id; //viene del middelware
 
     const students = await studentModel.listStudentsByTutorId(tutorId);
 
@@ -203,4 +267,6 @@ module.exports = {
   getStudentsByClass,
   getAllStudents,
   getStudentsByTutorId,
+  reactivateStudentController,
+  desactiveStudentController,
 };
