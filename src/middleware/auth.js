@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { verifyToken } = require("../utils/jwt");
 
 const checkToken = (req, res, next) => {
+  console.log("✅ checkToken ejecutado en:", req.method, req.originalUrl);
   try {
     if (!req.headers.authorization) {
       return res
@@ -29,10 +30,17 @@ const checkToken = (req, res, next) => {
 
 const authorizeRoles = (...rol) => {
   return (req, res, next) => {
-    if (!rol.includes(req.userLogin.rol)) {
+    console.log("probando authorice");
+    console.log(
+      "authorizeRoles ejecutado para:",
+      req.path,
+      "rol:",
+      req.userLogin?.rol
+    );
+    if (!rol===req.userLogin.rol) {
       return res.status(403).json({
         success: false,
-        message: "No tienes permiso para acceder a esta ruta",
+        message: "No tienes permiso para acceder a esta rutaS.",
       });
     }
     next();

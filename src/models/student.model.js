@@ -67,13 +67,13 @@ const selectStudents = async () => {
   const [result] = await pool.query(select);
   return result;
 };
-const deleteStudent = async (id) => {
+const deleteStudent = async (idStudent) => {
   const query = "DELETE FROM Student WHERE idStudent = ?";
-  const [result] = await pool.query(query, [id]);
+  const [result] = await pool.query(query, [idStudent]);
   return result;
 };
 
-const listStudentsByTutorId = async (id) => {
+const listStudentsByTutorId = async (tutorId) => {
   const select = `
     SELECT 
       s.idStudent, 
@@ -88,7 +88,7 @@ const listStudentsByTutorId = async (id) => {
     JOIN Class c ON s.class_id = c.idClass
     WHERE s.tutor_id = ? AND s.activo = 1
   `;
-  const [result] = await pool.query(select, [id]);
+  const [result] = await pool.query(select, [tutorId]);
   return result;
 };
 

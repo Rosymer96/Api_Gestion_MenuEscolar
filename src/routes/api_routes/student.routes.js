@@ -55,5 +55,6 @@ router.patch(
   authorizeRoles("administrador"),
   student.desactiveStudentController
 );
-router.get("/listByTutor", checkToken, student.getStudentsByTutorId);
+
+router.get("/listStudents",checkToken, authorizeRoles("tutor"));
 module.exports = router;
