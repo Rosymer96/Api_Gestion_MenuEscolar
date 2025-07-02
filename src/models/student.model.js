@@ -28,7 +28,13 @@ const addStudent = async (name, studentDni, classId, tutorDni) => {
 
 //Editar estudiante:
 
-const editStudentDB = async (id, name, studentDni, classId, tutorDni) => {
+const editStudentDB = async (
+  idStudent,
+  name,
+  studentDni,
+  classId,
+  tutorDni
+) => {
   const edit =
     "UPDATE Student SET name = ?, student_dni = ?, class_id = ?, tutor_dni = ? WHERE idStudent = ?";
   const [result] = await pool.query(edit, [
@@ -36,22 +42,22 @@ const editStudentDB = async (id, name, studentDni, classId, tutorDni) => {
     studentDni,
     classId,
     tutorDni,
-    id,
+    idStudent,
   ]);
   return result;
 };
 
 //Eliminar estudiante:
 
-const desactiveStudent = async (id) => {
+const desactiveStudent = async (idStudent) => {
   const desactive = "UPDATE Student SET active = FALSE WHERE idStudent = ?";
-  const [result] = await pool.query(desactive, [id]);
+  const [result] = await pool.query(desactive, [idStudent]);
   return result;
 };
 
-const reactivateStudent = async (dni) => {
+const reactivateStudent = async (idStudent) => {
   const reactive = "UPDATE Student SET active = TRUE WHERE idStudent = ?";
-  const [result] = await pool.query(reactive, [dni]);
+  const [result] = await pool.query(reactive, [idStudent]);
   return result;
 };
 
@@ -86,7 +92,7 @@ const listStudentsByTutorId = async (tutorId) => {
       c.name AS class_name
     FROM Student s
     JOIN Class c ON s.class_id = c.idClass
-    WHERE s.tutor_id = ? AND s.activo = 1
+    WHERE s.tutor_id = ? AND s.active = 1
   `;
   const [result] = await pool.query(select, [tutorId]);
   return result;

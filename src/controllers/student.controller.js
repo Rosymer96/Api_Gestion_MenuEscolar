@@ -8,8 +8,7 @@ const registerStudent = async (req, res) => {
     const { name, studentDni, classId, tutorDni } = req.body;
     if (!name || !studentDni || !classId || !tutorDni) {
       return res.status(400).json({
-        error:
-          "Todos los campos son obligatorios",
+        error: "Todos los campos son obligatorios",
       });
     }
 
@@ -17,11 +16,9 @@ const registerStudent = async (req, res) => {
 
     const existingStudent = await studentModel.findByDni(studentDni);
     if (existingStudent) {
-      return res
-        .status(409)
-        .json({
-          error: "Ya existe un estudiante registrado con este documento.",
-        });
+      return res.status(409).json({
+        error: "Ya existe un estudiante registrado con este documento.",
+      });
     }
     //Agrego el estudiante
     const result = await studentModel.addStudent(
@@ -227,10 +224,11 @@ const getAllStudents = async (req, res) => {
 };
 
 const getStudentsByTutorId = async (req, res) => {
+  const tutorId = req.userLogin.id; //viene del middelware
   try {
-    const tutorId = req.userLogin.id; //viene del middelware
-
+    console.log(tutorId);
     const students = await studentModel.listStudentsByTutorId(tutorId);
+    console.log(students);
 
     if (students.length === 0) {
       return res.status(404).json({
@@ -243,12 +241,14 @@ const getStudentsByTutorId = async (req, res) => {
       students: students,
     });
   } catch (error) {
+    console.log(tutorId);
     console.error("Error al listar estudiantes por tutor:", error);
     res.status(500).json({
       error: "Error del servidor al obtener los estudiantes por tutor",
     });
   }
 };
+
 const getStudendById = async (req, res) => {
   try {
     const { idStudent } = req.params;
