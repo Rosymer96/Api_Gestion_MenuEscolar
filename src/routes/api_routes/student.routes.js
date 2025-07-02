@@ -30,6 +30,7 @@ router.put(
   authorizeRoles("administrador"),
   student.editStudent
 );
+
 router.get(
   "/class/:classId",
   checkToken,
