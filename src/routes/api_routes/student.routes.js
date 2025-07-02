@@ -11,7 +11,12 @@ router.post(
   authorizeRoles("administrador"),
   student.registerStudent
 );
-
+router.get(
+  "/:idStudent",
+  checkToken,
+  authorizeRoles("administrador"),
+  student.getStudendById
+);
 router.delete(
   "/:idStudent",
   checkToken,

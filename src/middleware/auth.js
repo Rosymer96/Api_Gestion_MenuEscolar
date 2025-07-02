@@ -4,14 +4,18 @@ const { verifyToken } = require("../utils/jwt");
 const checkToken = (req, res, next) => {
   try {
     if (!req.headers.authorization) {
-      return res.json({ success: false, message: "El token es obligatorio" });
+      return res
+        .status(401)
+        .json({ success: false, message: "El token es obligatorio" });
     }
     //Separar el token de bears
     const token = req.headers.authorization.split(" ")[1];
 
     const resultToken = verifyToken(token);
     if (!resultToken) {
-      return res.json({ success: false, message: "Token invalido o expirado" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Token inválido o expirado" });
     }
     req.userLogin = resultToken;
     next();
@@ -35,4 +39,4 @@ const authorizeRoles = (...rol) => {
   };
 };
 
-module.exports = { checkToken, authorizeRoles  };
+module.exports = { checkToken, authorizeRoles };

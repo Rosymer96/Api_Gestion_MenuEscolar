@@ -52,7 +52,7 @@ const registerStudent = async (req, res) => {
 
 const editStudent = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { idStudent } = req.params;
     const { name, studentDni, classId, tutorDni } = req.body;
 
     // Validar datos obligatorios
@@ -63,7 +63,7 @@ const editStudent = async (req, res) => {
     }
 
     //verificar si el estudiante existe
-    const existingId = await studentModel.findById(id);
+    const existingId = await studentModel.findById(idStudent);
     if (!existingId) {
       return res.status(404).json({
         error: "Estudiante no encontrado",
@@ -72,13 +72,13 @@ const editStudent = async (req, res) => {
 
     // Verifica que el DNI no esté duplicado en otro estudiante
     const existingStudent = await studentModel.findByDni(studentDni);
-    if (existingStudent && existingStudent.idStudent !== parseInt(id)) {
+    if (existingStudent && existingStudent.idStudent !== parseInt(idStudent)) {
       return res
         .status(409)
         .json({ error: "El DNI ya está registrado a otro estudiante" });
     }
     const result = await studentModel.editStudentDB(
-      id,
+      idStudent,
       name,
       studentDni,
       classId,
@@ -88,9 +88,7 @@ const editStudent = async (req, res) => {
       return res.status(404).json({ error: "No se modifico ningun dato" });
     }
 
-    res
-      .status(200)
-      .json({ message: "Estudiante actualizado correctamente", data: result });
+    res.status(200).json({ message: "Estudiante actualizado correctamente" });
   } catch (error) {
     console.error("Error al editar estudiante:", error);
     res
@@ -101,20 +99,18 @@ const editStudent = async (req, res) => {
 
 const deleteStudent = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { idStudent } = req.params;
 
-    const existingId = await studentModel.findById(id);
+    const existingId = await studentModel.findById(idStudent);
     if (!existingId) {
       return res.status(404).json({
         error: "Estudiante no encontrado",
       });
     }
 
-    const result = await studentModel.deleteStudent(id);
+    const result = await studentModel.deleteStudent(idStudent);
 
-    res
-      .status(200)
-      .json({ message: "Estudiante eliminado correctamente.", data: result });
+    res.status(200).json({ message: "Estudiante eliminado correctamente." });
   } catch (error) {
     console.error("Error al eliminar estudiante:", error);
     res
@@ -259,6 +255,29 @@ const getStudentsByTutorId = async (req, res) => {
     });
   }
 };
+const getStudendById = async (req, res) => {
+  try {
+    const { idStudent } = req.params;
+
+    if (!idStudent) {
+      return res.status(400).json({
+        error: "El parámetro studentId es obligatorio",
+      });
+    }
+    console.log(`Buscando estudiante con ID: ${idStudent}`);
+    const student = await studentModel.findById(idStudent);
+    res.status(200).json({
+      message: "Estudiante encontrado",
+      student: student,
+    });
+  } catch (error) {
+    console.error("Error al listar estudiante por id:", error);
+    console.log(error);
+    res.status(500).json({
+      error: "Error del servidor al obtener los estudiantes por id",
+    });
+  }
+};
 
 module.exports = {
   registerStudent,
@@ -269,4 +288,5 @@ module.exports = {
   getStudentsByTutorId,
   reactivateStudentController,
   desactiveStudentController,
+  getStudendById,
 };

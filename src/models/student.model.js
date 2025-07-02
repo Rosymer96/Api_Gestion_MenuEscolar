@@ -8,9 +8,9 @@ const findByDni = async (studentDni) => {
   return result[0];
 };
 
-const findById = async (id) => {
+const findById = async (idStudent) => {
   const selectById = "SELECT * FROM Student WHERE idStudent = ?";
-  const [result] = await pool.query(selectById, [id]);
+  const [result] = await pool.query(selectById, [idStudent]);
   return result[0];
 };
 
@@ -62,7 +62,7 @@ const listStudentsByClass = async (classId) => {
 };
 
 const selectStudents = async () => {
-  const select = "SELECT * FROM Student";
+  const select = "SELECT * FROM Student WHERE class_id IS NOT NULL;";
   const [result] = await pool.query(select);
   return result;
 };
@@ -100,5 +100,6 @@ module.exports = {
   findById,
   listStudentsByClass,
   selectStudents,
-  listStudentsByTutorId,deleteStudent
+  listStudentsByTutorId,
+  deleteStudent,
 };
