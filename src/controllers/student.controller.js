@@ -9,7 +9,7 @@ const registerStudent = async (req, res) => {
     if (!name || !studentDni || !classId || !tutorDni) {
       return res.status(400).json({
         error:
-          "Todos los campos (name, studentDni, classId, tutorDni) son obligatorios",
+          "Todos los campos son obligatorios",
       });
     }
 
@@ -17,17 +17,11 @@ const registerStudent = async (req, res) => {
 
     const existingStudent = await studentModel.findByDni(studentDni);
     if (existingStudent) {
-      if (existingStudent.activo) {
-        return res
-          .status(409)
-          .json({ error: "Ya existe un estudiante activo con este DNI" });
-      } else {
-        // Reactivar al estudiante inactivo
-        await studentModel.reactivateStudent(studentDni);
-        return res
-          .status(200)
-          .json({ message: "Estudiante reactivado exitosamente" });
-      }
+      return res
+        .status(409)
+        .json({
+          error: "Ya existe un estudiante registrado con este documento.",
+        });
     }
     //Agrego el estudiante
     const result = await studentModel.addStudent(

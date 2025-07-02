@@ -56,7 +56,8 @@ const reactivateStudent = async (dni) => {
 };
 
 const listStudentsByClass = async (classId) => {
-  const query = "SELECT * FROM Student WHERE class_id = ?";
+  const query =
+    "SELECT * FROM Student WHERE class_id = ? ORDER BY createdAt DESC";
   const [result] = await pool.query(query, [classId]);
   return result;
 };
